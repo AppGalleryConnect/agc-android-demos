@@ -1,6 +1,5 @@
 # AGC Android Demos
 [![license](https://img.shields.io/badge/license-Apache--2.0-green)](./LICENCE)
-[![Page Views Count](https://badges.toozhao.com/badges/01ETCKH4BR4631J3NT3KBTR6QJ/green.svg)](https://badges.toozhao.com/badges/01ETCKH4BR4631J3NT3KBTR6QJ/green.svg "Get your own page views count badge on badges.toozhao.com")
 
 This repo contains the source code for AGC Android Demos, which are developed by the AppGallery Connect team.
 
