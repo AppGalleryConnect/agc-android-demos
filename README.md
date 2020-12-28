@@ -29,6 +29,8 @@ These are the available plugins in this repository.
 | [agc-remoteconfig-demo-java](./agc-remoteconfig-demo-java) | [![version](https://img.shields.io/badge/Release-1.2.1.300-yellow)](./agc-remoteconfig-demo-java) | [Getting Started](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-remoteconfig-android-getstarted-0000001056347165) <br/> [API Reference](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-References/android-remoteconfig-overview-0000001055692839) |
 | [agc-reportsapi-demo-java](./agc-reportsapi-demo-java) | [![version](https://img.shields.io/badge/Release-1.0-yellow)](./agc-reportsapi-demo-java) | [Getting Started](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agcapi-reports_api_overview) <br/> [API Reference](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-References/agcapi-appdownloadexport) |
 
+## Precautions
+The agc-android-demos project contains 15 independent projects. After downloading the code, you can load different nested projects to the IDE as required. And you can run each project independently.
 
 ## Question or issues
 If you have questions about how to use AppGallery Connect Demos, try the following options:  
