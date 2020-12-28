@@ -1,4 +1,4 @@
-# AGC Android Demos
+# agc-android-demos
 [![license](https://img.shields.io/badge/license-Apache--2.0-green)](./LICENCE)
 
 This repo contains the source code for AGC Android Demos, which are developed by the AppGallery Connect team.
@@ -8,7 +8,7 @@ about demos, and how to use them, see
 [Official Documentations](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Examples/agc-auth-android-samplecode-0000001058885130).
 
 
-## Plugins
+## Introduction
 These are the available plugins in this repository.
 
 | Demo | Version | Documentation |
