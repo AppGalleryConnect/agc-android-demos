@@ -16,6 +16,7 @@
 
 package com.huawei.agc.quickstart.auth;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,13 +25,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.huawei.agconnect.auth.AGConnectAuth;
 import com.huawei.agconnect.auth.AGConnectAuthCredential;
-import com.huawei.agconnect.auth.EmailAuthProvider;
-import com.huawei.agconnect.auth.PhoneAuthProvider;
 import com.huawei.agconnect.auth.VerifyCodeResult;
 import com.huawei.agconnect.auth.VerifyCodeSettings;
 import com.huawei.hmf.tasks.OnFailureListener;
@@ -38,7 +36,7 @@ import com.huawei.hmf.tasks.OnSuccessListener;
 import com.huawei.hmf.tasks.Task;
 import com.huawei.hmf.tasks.TaskExecutors;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends Activity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     @Override
@@ -52,9 +50,20 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.layout_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AGConnectAuth.getInstance().deleteUser();
-                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
-                SettingsActivity.this.finish();
+                // delete user
+                AGConnectAuth.getInstance().deleteUser()
+                    .addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                            SettingsActivity.this.finish();
+                        }
+                    }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(SettingsActivity.this, "delete user fail:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -75,16 +84,20 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.layout_update_password).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AGConnectAuth.getInstance().getCurrentUser().updatePassword("new password", "verifyCode", AGConnectAuthCredential.Email_Provider);
-                //or
-                //AGConnectAuth.getInstance().getCurrentUser().updatePassword("new password", "verifyCode", AGConnectAuthCredential.Phone_Provider);
+                // update password
+                if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+                    AGConnectAuth.getInstance().getCurrentUser().updatePassword("new password", "verify code", AGConnectAuthCredential.Email_Provider);
+                    //or
+                    //AGConnectAuth.getInstance().getCurrentUser().updatePassword("new password", "verify code", AGConnectAuthCredential.Phone_Provider);
+                }
             }
         });
 
         findViewById(R.id.layout_reset_password).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AGConnectAuth.getInstance().resetPassword("email", "new password", "verifycode");
+                // reset password
+                AGConnectAuth.getInstance().resetPassword("email", "new password", "verify code");
                 //or
                 //AGConnectAuth.getInstance().resetPassword("countryCode", "phoneNumber", "new password", "verifycode");
             }
@@ -101,15 +114,23 @@ public class SettingsActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String cc = editCc.getText().toString();
-                String phone = editAccount.getText().toString();
+                String countryCode = editCc.getText().toString();
+                String phoneNumber = editAccount.getText().toString();
+                //build a verify code settings
                 VerifyCodeSettings settings = VerifyCodeSettings.newBuilder()
                     .action(VerifyCodeSettings.ACTION_REGISTER_LOGIN)
                     .build();
-                Task<VerifyCodeResult> task = PhoneAuthProvider.requestVerifyCode(cc, phone, settings);
+                // request verify code,and waiting for the verification code to be sent to your mobile phone
+                Task<VerifyCodeResult> task = AGConnectAuth.getInstance().requestVerifyCode(countryCode, phoneNumber, settings);
                 task.addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<VerifyCodeResult>() {
                     @Override
                     public void onSuccess(VerifyCodeResult verifyCodeResult) {
+                        Toast.makeText(SettingsActivity.this, "request verify code success", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(SettingsActivity.this, "request verify code fail:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -118,21 +139,25 @@ public class SettingsActivity extends AppCompatActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String cc = editCc.getText().toString();
-                String phone = editAccount.getText().toString();
+                String countryCode = editCc.getText().toString();
+                String phoneNumber = editAccount.getText().toString();
                 String verifyCode = editCode.getText().toString();
-                AGConnectAuth.getInstance().getCurrentUser().updatePhone(cc, phone, verifyCode)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+                    // update phone
+                    AGConnectAuth.getInstance().getCurrentUser().updatePhone(countryCode, phoneNumber, verifyCode)
+                        .addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "updatePhone success");
+                                Toast.makeText(SettingsActivity.this, "updatePhone success", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "updatePhone success");
+                        public void onFailure(Exception e) {
+                            Toast.makeText(SettingsActivity.this, "updatePhone fail:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d(TAG, "updatePhone fail" + e);
-                    }
-                });
+                    });
+                }
                 dialog.dismiss();
             }
         });
@@ -148,14 +173,21 @@ public class SettingsActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //build a verify code settings
                 String email = editAccount.getText().toString();
                 VerifyCodeSettings settings = VerifyCodeSettings.newBuilder()
                     .action(VerifyCodeSettings.ACTION_REGISTER_LOGIN)
                     .build();
-                Task<VerifyCodeResult> task = EmailAuthProvider.requestVerifyCode(email, settings);
+                Task<VerifyCodeResult> task = AGConnectAuth.getInstance().requestVerifyCode(email, settings);
                 task.addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<VerifyCodeResult>() {
                     @Override
                     public void onSuccess(VerifyCodeResult verifyCodeResult) {
+                        Toast.makeText(SettingsActivity.this, "request verify code success", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(SettingsActivity.this, "request verify code fail:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -166,18 +198,20 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = editAccount.getText().toString();
                 String verifyCode = editCode.getText().toString();
-                AGConnectAuth.getInstance().getCurrentUser().updateEmail(email, verifyCode)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+                    AGConnectAuth.getInstance().getCurrentUser().updateEmail(email, verifyCode)
+                        .addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(SettingsActivity.this, "updateEmail success", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "updateEmail success");
+                        public void onFailure(Exception e) {
+                            Toast.makeText(SettingsActivity.this, "updateEmail fail:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d(TAG, "updateEmail fail" + e);
-                    }
-                });
+                    });
+                }
                 dialog.dismiss();
             }
         });

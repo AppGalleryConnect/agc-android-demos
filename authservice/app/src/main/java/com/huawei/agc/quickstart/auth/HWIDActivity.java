@@ -25,7 +25,11 @@ import androidx.annotation.Nullable;
 import com.huawei.agconnect.auth.AGConnectAuth;
 import com.huawei.agconnect.auth.AGConnectAuthCredential;
 import com.huawei.agconnect.auth.HwIdAuthProvider;
+import com.huawei.agconnect.auth.SignInResult;
+import com.huawei.hmf.tasks.OnFailureListener;
+import com.huawei.hmf.tasks.OnSuccessListener;
 import com.huawei.hmf.tasks.Task;
+import com.huawei.hmf.tasks.TaskExecutors;
 import com.huawei.hms.common.ApiException;
 import com.huawei.hms.support.api.entity.auth.Scope;
 import com.huawei.hms.support.api.entity.hwid.HwIDConstant;
@@ -68,6 +72,7 @@ public class HWIDActivity extends ThirdBaseActivity {
     @Override
     public void unlink() {
         if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+            // unlink huawei id
             AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.HMS_Provider);
         }
     }
@@ -80,7 +85,9 @@ public class HWIDActivity extends ThirdBaseActivity {
             if (authHuaweiIdTask.isSuccessful()) {
                 AuthHuaweiId huaweiAccount = authHuaweiIdTask.getResult();
                 Log.i(TAG, "accessToken:" + huaweiAccount.getAccessToken());
+                // create huawei id credential
                 AGConnectAuthCredential credential = HwIdAuthProvider.credentialWithToken(huaweiAccount.getAccessToken());
+                // sign in
                 auth.signIn(credential)
                     .addOnSuccessListener(signInResult -> loginSuccess())
                     .addOnFailureListener(e -> showToast(e.getMessage()));
@@ -91,12 +98,23 @@ public class HWIDActivity extends ThirdBaseActivity {
             Task<AuthHuaweiId> authHuaweiIdTask = HuaweiIdAuthManager.parseAuthResultFromIntent(data);
             if (authHuaweiIdTask.isSuccessful()) {
                 AuthHuaweiId huaweiAccount = authHuaweiIdTask.getResult();
+                // create huawei id credential
                 AGConnectAuthCredential credential = HwIdAuthProvider.credentialWithToken(huaweiAccount.getAccessToken());
-                auth.signIn(credential).addOnSuccessListener(signInResult -> {
-                    showToast("link success");
-                }).addOnFailureListener(e -> {
-                    showToast(e.getMessage());
-                });
+                if (auth.getCurrentUser() != null) {
+                    // link huawei id
+                    auth.getCurrentUser().link(credential)
+                        .addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<SignInResult>() {
+                            @Override
+                            public void onSuccess(SignInResult signInResult) {
+                                showToast("link success");
+                            }
+                        }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            showToast(e.getMessage());
+                        }
+                    });
+                }
             } else {
                 Log.e(TAG, "sign in failed : " + ((ApiException) authHuaweiIdTask.getException()).getStatusCode());
             }

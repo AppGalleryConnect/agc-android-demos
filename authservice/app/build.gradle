@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.huawei.agconnect'
 
-
 android {
     compileSdkVersion 29
-    buildToolsVersion "28.0.3"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.huawei.agc.quickstart"
         minSdkVersion 23
@@ -20,7 +19,7 @@ android {
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,9 +47,6 @@ dependencies {
     // Wechat
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
 
-    //weibo
-    //implementation 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
-
     //Google
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
@@ -62,4 +58,7 @@ dependencies {
 
     // Twitter
     implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
+    implementation "androidx.core:core-ktx:+"
+
 }
+

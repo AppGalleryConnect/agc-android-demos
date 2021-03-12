@@ -16,6 +16,7 @@
 
 package com.huawei.agc.quickstart.auth;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,12 +26,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.huawei.agconnect.auth.AGConnectAuth;
-import com.huawei.agconnect.auth.EmailAuthProvider;
 import com.huawei.agconnect.auth.EmailUser;
-import com.huawei.agconnect.auth.PhoneAuthProvider;
 import com.huawei.agconnect.auth.PhoneUser;
 import com.huawei.agconnect.auth.SignInResult;
 import com.huawei.agconnect.auth.VerifyCodeResult;
@@ -42,7 +39,7 @@ import com.huawei.hmf.tasks.TaskExecutors;
 
 import java.util.Locale;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends Activity implements View.OnClickListener {
     private EditText countryCodeEdit;
     private EditText accountEdit;
     private EditText passwordEdit;
@@ -97,16 +94,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             String email = accountEdit.getText().toString().trim();
             String password = passwordEdit.getText().toString().trim();
             String verifyCode = verifyCodeEdit.getText().toString().trim();
-
+            // build email user
             EmailUser emailUser = new EmailUser.Builder()
                 .setEmail(email)
-                .setPassword(password)//optional
+                .setPassword(password)//optional,if you set a password, you can log in directly using the password next time.
                 .setVerifyCode(verifyCode)
                 .build();
+            // create email user
             AGConnectAuth.getInstance().createUser(emailUser)
                 .addOnSuccessListener(new OnSuccessListener<SignInResult>() {
                     @Override
                     public void onSuccess(SignInResult signInResult) {
+                        // After a user is created, the user has logged in by default.
                         startActivity(new Intent(RegisterActivity.this, AuthMainActivity.class));
                     }
                 })
@@ -122,16 +121,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             String phoneNumber = accountEdit.getText().toString().trim();
             String password = passwordEdit.getText().toString().trim();
             String verifyCode = verifyCodeEdit.getText().toString().trim();
+            // build phone user
             PhoneUser phoneUser = new PhoneUser.Builder()
                 .setCountryCode(countryCode)
                 .setPhoneNumber(phoneNumber)
                 .setPassword(password)//optional
                 .setVerifyCode(verifyCode)
                 .build();
+            // create phone user
             AGConnectAuth.getInstance().createUser(phoneUser)
                 .addOnSuccessListener(new OnSuccessListener<SignInResult>() {
                     @Override
                     public void onSuccess(SignInResult signInResult) {
+                        // After a user is created, the user has logged in by default.
                         startActivity(new Intent(RegisterActivity.this, AuthMainActivity.class));
                     }
                 })
@@ -146,16 +148,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void sendVerificationCode() {
         VerifyCodeSettings settings = VerifyCodeSettings.newBuilder()
-            .action(VerifyCodeSettings.ACTION_REGISTER_LOGIN)
+            .action(VerifyCodeSettings.ACTION_REGISTER_LOGIN)// action type
             .sendInterval(30) //shortest send interval ，30-120s
             .locale(Locale.SIMPLIFIED_CHINESE) //optional,must contain country and language eg:zh_CN
             .build();
         if (type == LoginActivity.Type.EMAIL) {
             String email = accountEdit.getText().toString().trim();
-            Task<VerifyCodeResult> task = EmailAuthProvider.requestVerifyCode(email, settings);
+            // apply for a verification code by email, indicating that the email is owned by you.
+            Task<VerifyCodeResult> task = AGConnectAuth.getInstance().requestVerifyCode(email, settings);
             task.addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<VerifyCodeResult>() {
                 @Override
                 public void onSuccess(VerifyCodeResult verifyCodeResult) {
+                    Toast.makeText(RegisterActivity.this, "send email verify code success", Toast.LENGTH_SHORT).show();
                     //You need to get the verification code from your email
                 }
             }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
@@ -167,10 +171,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else {
             String countryCode = countryCodeEdit.getText().toString().trim();
             String phoneNumber = accountEdit.getText().toString().trim();
-            Task<VerifyCodeResult> task = PhoneAuthProvider.requestVerifyCode(countryCode, phoneNumber, settings);
+            // apply for a verification code by phone, indicating that the phone is owned by you.
+            Task<VerifyCodeResult> task = AGConnectAuth.getInstance().requestVerifyCode(countryCode, phoneNumber, settings);
             task.addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<VerifyCodeResult>() {
                 @Override
                 public void onSuccess(VerifyCodeResult verifyCodeResult) {
+                    Toast.makeText(RegisterActivity.this, "send phone verify code success", Toast.LENGTH_SHORT).show();
                     //You need to get the verification code from your phone
                 }
             }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {

@@ -21,21 +21,43 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.huawei.agc.quickstart.crash.R;
 import com.huawei.agconnect.crash.AGConnectCrash;
 
 public class MainActivity extends Activity {
+    static {
+        System.loadLibrary("native_crash_create");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Record customized logs
+        AGConnectCrash.getInstance().log("onCreate");
+
+        // Record Custom Status
+        AGConnectCrash.getInstance().setCustomKey("keyInt", 1);
+        AGConnectCrash.getInstance().setCustomKey("keyString", "String value");
+
+        // Set the user ID
+        AGConnectCrash.getInstance().setUserId("123456789");
+
+        try {
+            throw new NullPointerException();
+        } catch (NullPointerException ex) {
+            AGConnectCrash.getInstance().log("catch exception");
+
+            // Record non-fatal exception
+            AGConnectCrash.getInstance().recordException(ex);
+        }
+
         Button btn_crash = findViewById(R.id.btn_crash);
         btn_crash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AGConnectCrash.getInstance().testIt();
+                // Simulate a crash
+                AGConnectCrash.getInstance().testIt(MainActivity.this);
             }
         });
 
@@ -52,6 +74,14 @@ public class MainActivity extends Activity {
                 AGConnectCrash.getInstance().enableCrashCollection(true);
             }
         });
+
+        findViewById(R.id.ndk_crash).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nativeCrashCreate();
+            }
+        });
     }
 
+    public native int nativeCrashCreate();
 }

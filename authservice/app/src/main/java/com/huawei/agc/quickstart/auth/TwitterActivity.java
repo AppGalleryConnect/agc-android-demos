@@ -57,7 +57,9 @@ public class TwitterActivity extends ThirdBaseActivity {
             public void success(Result<TwitterSession> result) {
                 String token = result.data.getAuthToken().token;
                 String secret = result.data.getAuthToken().secret;
+                // create twitter credential
                 AGConnectAuthCredential credential = TwitterAuthProvider.credentialWithToken(token, secret);
+                // sign in
                 auth.signIn(credential)
                     .addOnSuccessListener(signInResult -> loginSuccess())
                     .addOnFailureListener(e -> showToast(e.getMessage()));
@@ -77,12 +79,16 @@ public class TwitterActivity extends ThirdBaseActivity {
             public void success(Result<TwitterSession> result) {
                 String token = result.data.getAuthToken().token;
                 String secret = result.data.getAuthToken().secret;
+                // create twitter credential
                 AGConnectAuthCredential credential = TwitterAuthProvider.credentialWithToken(token, secret);
-                auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
-                    showToast("link success");
-                }).addOnFailureListener(e -> {
-                    showToast(e.getMessage());
-                });
+                if (auth.getCurrentUser() != null) {
+                    // link twitter
+                    auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
+                        showToast("link success");
+                    }).addOnFailureListener(e -> {
+                        showToast(e.getMessage());
+                    });
+                }
             }
 
             @Override
@@ -95,6 +101,7 @@ public class TwitterActivity extends ThirdBaseActivity {
     @Override
     public void unlink() {
         if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+            // unlink twitter
             AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.Twitter_Provider);
         }
     }

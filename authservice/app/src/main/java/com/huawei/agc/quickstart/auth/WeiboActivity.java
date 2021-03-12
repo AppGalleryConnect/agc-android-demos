@@ -51,8 +51,10 @@ public class WeiboActivity extends ThirdBaseActivity {
         ssoHandler.authorize(new WbAuthListener() {
             @Override
             public void onSuccess(Oauth2AccessToken oauth2AccessToken) {
+                // create Weibo credential
                 AGConnectAuthCredential credential =
                     WeiboAuthProvider.credentialWithToken(oauth2AccessToken.getToken(), oauth2AccessToken.getUid());
+                // sign in
                 auth.signIn(credential)
                     .addOnSuccessListener(signInResult -> loginSuccess())
                     .addOnFailureListener(e -> showToast(e.getMessage()));
@@ -75,13 +77,16 @@ public class WeiboActivity extends ThirdBaseActivity {
         ssoHandler.authorize(new WbAuthListener() {
             @Override
             public void onSuccess(Oauth2AccessToken oauth2AccessToken) {
+                // create Weibo credential
                 AGConnectAuthCredential credential =
                     WeiboAuthProvider.credentialWithToken(oauth2AccessToken.getToken(), oauth2AccessToken.getUid());
-                auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
-                    showToast("link success");
-                }).addOnFailureListener(e -> {
-                    showToast(e.getMessage());
-                });
+                if (auth.getCurrentUser() != null) {
+                    auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
+                        showToast("link success");
+                    }).addOnFailureListener(e -> {
+                        showToast(e.getMessage());
+                    });
+                }
             }
 
             @Override
@@ -99,6 +104,7 @@ public class WeiboActivity extends ThirdBaseActivity {
     @Override
     public void unlink() {
         if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+            // unlink weibo
             AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.WeiBo_Provider);
         }
     }

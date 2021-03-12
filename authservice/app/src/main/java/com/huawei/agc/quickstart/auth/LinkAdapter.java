@@ -33,13 +33,15 @@ import java.util.List;
 
 public class LinkAdapter extends ArrayAdapter<LinkEntity> {
 
-    List<LinkEntity> list;
+    private List<LinkEntity> list;
     private int resourceId;
+    private AuthMainActivity.LinkClickCallback linkClickCallback;
 
-    public LinkAdapter(@NonNull Context context, int resource, List<LinkEntity> list) {
+    public LinkAdapter(@NonNull Context context, int resource, List<LinkEntity> list, AuthMainActivity.LinkClickCallback linkClickCallback) {
         super(context, resource);
         this.resourceId = resource;
         this.list = list;
+        this.linkClickCallback = linkClickCallback;
     }
 
     @NonNull
@@ -67,6 +69,9 @@ public class LinkAdapter extends ArrayAdapter<LinkEntity> {
                     Intent intent = new Intent(getContext(), linkEntity.getActivity());
                     intent.putExtra("link", true);
                     getContext().startActivity(intent);
+                    if (linkClickCallback != null) {
+                        linkClickCallback.click();
+                    }
                 }
             }
         });

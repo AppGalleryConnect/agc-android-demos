@@ -16,11 +16,12 @@
 
 package com.huawei.agc.quickstart.auth;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.huawei.agconnect.auth.AGConnectAuth;
 import com.huawei.agconnect.auth.AGConnectAuthCredential;
@@ -31,29 +32,34 @@ import com.huawei.hmf.tasks.OnFailureListener;
 import com.huawei.hmf.tasks.OnSuccessListener;
 import com.huawei.hmf.tasks.TaskExecutors;
 
-public class EmailActivity extends AppCompatActivity {
+public class EmailActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_email);
+        setContentView(R.layout.activity_email_phone);
         findViewById(R.id.btn_link).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* create a email credential
+                 * the credential used for link must contain a verify code.
+                 * password is optional, if password is not null, both the password and verification code are verified.
+                 */
                 AGConnectAuthCredential credential = EmailAuthProvider.credentialWithVerifyCode("email", null, "verify code");
                 AGConnectUser agcUser = AGConnectAuth.getInstance().getCurrentUser();
                 if (agcUser != null) {
+                    // link email
                     agcUser.link(credential)
                         .addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<SignInResult>() {
                             @Override
                             public void onSuccess(SignInResult signInResult) {
-
+                                Toast.makeText(EmailActivity.this, "Link Email Success", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
                             @Override
                             public void onFailure(Exception e) {
-
+                                Toast.makeText(EmailActivity.this, "Link Email fail:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                 }
@@ -63,9 +69,9 @@ public class EmailActivity extends AppCompatActivity {
         findViewById(R.id.btn_unlink).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AGConnectUser agcUser = AGConnectAuth.getInstance().getCurrentUser();
-                if (agcUser != null) {
-                    agcUser.unlink(AGConnectAuthCredential.Email_Provider);
+                if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+                    // unlink email
+                    AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.Email_Provider);
                 }
             }
         });

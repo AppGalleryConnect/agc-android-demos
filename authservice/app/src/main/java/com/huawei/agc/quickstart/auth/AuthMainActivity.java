@@ -16,14 +16,13 @@
 
 package com.huawei.agc.quickstart.auth;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,9 +32,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.huawei.agconnect.auth.AGConnectAuth;
 import com.huawei.agconnect.auth.AGConnectUser;
@@ -47,43 +43,31 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthMainActivity extends AppCompatActivity implements View.OnClickListener {
-    AGConnectAuth agConnectAuth;
-    LinearLayout layoutSingout;
+public class AuthMainActivity extends Activity implements View.OnClickListener {
+    LinearLayout layoutSingOut;
     ImageView imgViewPhoto;
+    TextView txtViewUid;
     TextView txtViewNickName;
     TextView txtViewEmail;
     TextView txtViewPhone;
-    Button btnSignout;
+    Button btnSignOut;
     Button btnUpdateName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_main);
-        agConnectAuth = AGConnectAuth.getInstance();
         initView();
         showUserInfo();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        startActivity(new Intent(this, SettingsActivity.class));
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initView() {
-        layoutSingout = findViewById(R.id.layout_SingOut);
-        btnSignout = findViewById(R.id.btn_Signout);
-        btnSignout.setOnClickListener(this);
+        layoutSingOut = findViewById(R.id.layout_SingOut);
+        btnSignOut = findViewById(R.id.btn_Signout);
+        btnSignOut.setOnClickListener(this);
         imgViewPhoto = findViewById(R.id.imgView_photo);
         imgViewPhoto.setOnClickListener(this);
+        txtViewUid = findViewById(R.id.txtView_uid);
         txtViewNickName = findViewById(R.id.txtView_NickName);
         txtViewEmail = findViewById(R.id.txtView_email);
         txtViewPhone = findViewById(R.id.txtView_phone);
@@ -91,14 +75,17 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
         btnUpdateName.setOnClickListener(this);
 
         findViewById(R.id.btn_link).setOnClickListener(this);
+        findViewById(R.id.txtView_settings).setOnClickListener(this);
     }
 
     private void showUserInfo() {
-        AGConnectUser agConnectUser = agConnectAuth.getCurrentUser();
+        AGConnectUser agConnectUser = AGConnectAuth.getInstance().getCurrentUser();
+        String uid = agConnectUser.getUid();
         String nickname = agConnectUser.getDisplayName();
         String email = agConnectUser.getEmail();
         String phone = agConnectUser.getPhone();
         String photoUrl = agConnectUser.getPhotoUrl();
+        txtViewUid.setText(uid);
         txtViewNickName.setText(nickname);
         txtViewEmail.setText(email);
         txtViewPhone.setText(phone);
@@ -111,8 +98,9 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_Signout:
-                if (agConnectAuth.getCurrentUser() != null) {
-                    agConnectAuth.signOut();
+                if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+                    // signOut
+                    AGConnectAuth.getInstance().signOut();
                     startActivity(new Intent(this, LoginActivity.class));
                     finish();
                 }
@@ -126,6 +114,9 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_link:
                 link();
                 break;
+            case R.id.txtView_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
         }
     }
 
@@ -134,14 +125,25 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
         final AlertDialog dialog = new AlertDialog.Builder(this).setView(view).create();
         ListView listView = view.findViewById(R.id.list_view);
         List<LinkEntity> linkEntityList = initLink();
-        LinkAdapter linkAdapter = new LinkAdapter(dialog.getContext(), R.layout.list_link_item, linkEntityList);
+        LinkAdapter linkAdapter = new LinkAdapter(dialog.getContext(), R.layout.list_link_item, linkEntityList, new LinkClickCallback() {
+            @Override
+            public void click() {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
         listView.setAdapter(linkAdapter);
         dialog.show();
     }
 
+    interface LinkClickCallback {
+        void click();
+    }
+
     private List<LinkEntity> initLink() {
         List<LinkEntity> linkEntityList = new ArrayList<>();
-        linkEntityList.add(new LinkEntity("HMS", R.mipmap.huawei, HWIDActivity.class));
+        linkEntityList.add(new LinkEntity("Huawei ID", R.mipmap.huawei, HWIDActivity.class));
         linkEntityList.add(new LinkEntity("Facebook ", R.mipmap.facebook, FacebookActivity.class));
         linkEntityList.add(new LinkEntity("Twitter", R.mipmap.twitter, TwitterActivity.class));
         linkEntityList.add(new LinkEntity("WeiXin", R.mipmap.wechat, WeiXinActivity.class));
@@ -150,9 +152,9 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
         linkEntityList.add(new LinkEntity("WeiBo", R.mipmap.weibo, WeiboActivity.class));
         linkEntityList.add(new LinkEntity("Google ", R.mipmap.google_plus, GoogleActivity.class));
         linkEntityList.add(new LinkEntity("GoogleGame", R.mipmap.google_plus, GooglePlayActivity.class));
-        linkEntityList.add(new LinkEntity("SelfBuild ", R.mipmap.ic_launcher, SelfBuildActivity.class));
-        linkEntityList.add(new LinkEntity("Phone", R.mipmap.ic_launcher, PhoneActivity.class));
-        linkEntityList.add(new LinkEntity("Email", R.mipmap.ic_launcher, EmailActivity.class));
+        linkEntityList.add(new LinkEntity("SelfBuild ", R.mipmap.huawei, SelfBuildActivity.class));
+        linkEntityList.add(new LinkEntity("Phone", R.mipmap.huawei, PhoneActivity.class));
+        linkEntityList.add(new LinkEntity("Email", R.mipmap.huawei, EmailActivity.class));
         return linkEntityList;
     }
 
@@ -160,11 +162,13 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
         update(new UpdateCallback() {
             @Override
             public void onUpdate(String data) {
-                if (agConnectAuth.getCurrentUser() != null) {
+                if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+                    // create a profileRequest
                     ProfileRequest userProfile = new ProfileRequest.Builder()
                         .setDisplayName(data)
                         .build();
-                    agConnectAuth.getCurrentUser().updateProfile(userProfile)
+                    // update profile
+                    AGConnectAuth.getInstance().getCurrentUser().updateProfile(userProfile)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -174,7 +178,7 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(Exception e) {
-                                Toast.makeText(AuthMainActivity.this, "update disolayname fail:" + e, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AuthMainActivity.this, "update display name fail:" + e, Toast.LENGTH_SHORT).show();
                             }
                         });
                 }
@@ -186,11 +190,13 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
         update(new UpdateCallback() {
             @Override
             public void onUpdate(String data) {
-                if (agConnectAuth.getCurrentUser() != null) {
+                if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+                    // create a profileRequest
                     ProfileRequest userProfile = new ProfileRequest.Builder()
                         .setPhotoUrl(data)
                         .build();
-                    agConnectAuth.getCurrentUser().updateProfile(userProfile)
+                    // update profile
+                    AGConnectAuth.getInstance().getCurrentUser().updateProfile(userProfile)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -200,7 +206,7 @@ public class AuthMainActivity extends AppCompatActivity implements View.OnClickL
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(Exception e) {
-                                Toast.makeText(AuthMainActivity.this, "update photoUrl fail:" + e, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AuthMainActivity.this, "update photo Url fail:" + e, Toast.LENGTH_SHORT).show();
                             }
                         });
                 }

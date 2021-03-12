@@ -39,7 +39,9 @@ public class FacebookActivity extends ThirdBaseActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String token = loginResult.getAccessToken().getToken();
+                // create facebook credential
                 AGConnectAuthCredential credential = FacebookAuthProvider.credentialWithToken(token);
+                // signIn
                 auth.signIn(credential)
                     .addOnSuccessListener(signInResult -> loginSuccess())
                     .addOnFailureListener(e -> showToast(e.getMessage()));
@@ -64,8 +66,10 @@ public class FacebookActivity extends ThirdBaseActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String token = loginResult.getAccessToken().getToken();
+                // create facebook credential
                 AGConnectAuthCredential credential = FacebookAuthProvider.credentialWithToken(token);
                 if (auth.getCurrentUser() != null) {
+                    // link facebook
                     auth.getCurrentUser()
                         .link(credential)
                         .addOnSuccessListener(signInResult -> {
@@ -92,6 +96,7 @@ public class FacebookActivity extends ThirdBaseActivity {
     @Override
     public void unlink() {
         if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+            // unlink facebook,make sure you have already linked facebook
             AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.Facebook_Provider);
         }
     }

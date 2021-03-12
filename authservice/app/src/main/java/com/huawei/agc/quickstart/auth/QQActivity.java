@@ -31,26 +31,29 @@ import com.tencent.tauth.UiError;
 import org.json.JSONObject;
 
 public class QQActivity extends ThirdBaseActivity {
-    private Tencent mTencent;
+    private Tencent tencent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTencent = Tencent.createInstance(getString(R.string.qq_app_id), this.getApplicationContext());
+        tencent = Tencent.createInstance(getString(R.string.qq_app_id), this.getApplicationContext());
     }
 
     @Override
     public void login() {
-        mTencent.login(this, "all", new IUiListener() {
+        tencent.login(this, "all", new IUiListener() {
             @Override
             public void onComplete(Object o) {
                 JSONObject jsonObject = (JSONObject) o;
                 String accessToken = jsonObject.optString("access_token");
                 String openId = jsonObject.optString("openid");
+                // create qq credential
                 AGConnectAuthCredential credential = QQAuthProvider.credentialWithToken(accessToken, openId);
-                auth.signIn(credential).addOnSuccessListener(signInResult -> {
-                    loginSuccess();
-                }).addOnFailureListener(e -> {
+                // sign in
+                auth.signIn(credential)
+                    .addOnSuccessListener(signInResult -> {
+                        loginSuccess();
+                    }).addOnFailureListener(e -> {
                     showToast(e.getMessage());
                 });
             }
@@ -69,18 +72,23 @@ public class QQActivity extends ThirdBaseActivity {
 
     @Override
     public void link() {
-        mTencent.login(this, "all", new IUiListener() {
+        tencent.login(this, "all", new IUiListener() {
             @Override
             public void onComplete(Object o) {
                 JSONObject jsonObject = (JSONObject) o;
                 String accessToken = jsonObject.optString("access_token");
                 String openId = jsonObject.optString("openid");
+                // create qq credential
                 AGConnectAuthCredential credential = QQAuthProvider.credentialWithToken(accessToken, openId);
-                auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
-                    showToast("link success");
-                }).addOnFailureListener(e -> {
-                    showToast(e.getMessage());
-                });
+                if (auth.getCurrentUser() != null) {
+                    // link qq
+                    auth.getCurrentUser().link(credential)
+                        .addOnSuccessListener(signInResult -> {
+                            showToast("link success");
+                        }).addOnFailureListener(e -> {
+                        showToast(e.getMessage());
+                    });
+                }
             }
 
             @Override

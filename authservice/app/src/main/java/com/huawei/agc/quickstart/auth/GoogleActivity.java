@@ -57,6 +57,7 @@ public class GoogleActivity extends ThirdBaseActivity {
     @Override
     public void unlink() {
         if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+            // unlink google , make sure you have already linked google
             AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.Google_Provider);
         }
     }
@@ -67,8 +68,9 @@ public class GoogleActivity extends ThirdBaseActivity {
         if (requestCode == SIGN_CODE) {
             GoogleSignIn.getSignedInAccountFromIntent(data)
                 .addOnSuccessListener(googleSignInAccount -> {
-                    AGConnectAuthCredential credential =
-                        GoogleAuthProvider.credentialWithToken(googleSignInAccount.getIdToken());
+                    // create google credential
+                    AGConnectAuthCredential credential = GoogleAuthProvider.credentialWithToken(googleSignInAccount.getIdToken());
+                    // signIn with google credential
                     auth.signIn(credential)
                         .addOnSuccessListener(signInResult -> loginSuccess())
                         .addOnFailureListener(e -> showToast(e.getMessage()));
@@ -76,8 +78,10 @@ public class GoogleActivity extends ThirdBaseActivity {
                 .addOnFailureListener(e -> showToast(e.getMessage()));
         } else if (requestCode == LINK_CODE) {
             GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener(googleSignInAccount -> {
+                // create google credential
                 AGConnectAuthCredential credential = GoogleAuthProvider.credentialWithToken(googleSignInAccount.getIdToken());
                 if (auth.getCurrentUser() != null) {
+                    // link google
                     auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
                         showToast("link success");
                     }).addOnFailureListener(e -> {

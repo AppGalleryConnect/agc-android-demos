@@ -36,7 +36,9 @@ public class WeiXinActivity extends ThirdBaseActivity {
         WXHelper.signIn(new WXHelper.Callback() {
             @Override
             public void onSuccess(String accessToken, String openId) {
+                // create weiXin credential
                 AGConnectAuthCredential credential = WeixinAuthProvider.credentialWithToken(accessToken, openId);
+                // sign in
                 auth.signIn(credential)
                     .addOnSuccessListener(signInResult -> loginSuccess())
                     .addOnFailureListener(e -> showToast(e.getMessage()));
@@ -54,12 +56,16 @@ public class WeiXinActivity extends ThirdBaseActivity {
         WXHelper.signIn(new WXHelper.Callback() {
             @Override
             public void onSuccess(String accessToken, String openId) {
+                // create weiXin credential
                 AGConnectAuthCredential credential = WeixinAuthProvider.credentialWithToken(accessToken, openId);
-                auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
-                    showToast("link success");
-                }).addOnFailureListener(e -> {
-                    showToast(e.getMessage());
-                });
+                if (auth.getCurrentUser() != null) {
+                    // link weiXin
+                    auth.getCurrentUser().link(credential)
+                        .addOnSuccessListener(signInResult -> showToast("link success"))
+                        .addOnFailureListener(e -> {
+                            showToast(e.getMessage());
+                        });
+                }
             }
 
             @Override

@@ -24,86 +24,41 @@ import com.huawei.agconnect.auth.AGConnectAuth;
 import com.huawei.agconnect.auth.AGConnectAuthCredential;
 import com.huawei.agconnect.auth.SelfBuildProvider;
 
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
-
 public class SelfBuildActivity extends ThirdBaseActivity {
-    private Retrofit retrofit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        retrofit = new Retrofit.Builder().baseUrl("https://lfdswebdevapi01.hwcloudtest.cn:17062").build();
     }
 
     @Override
     public void login() {
-        retrofit.create(JWTService.class)
-            .getJwt("98341621547925918", "testId", "testDisplayName", "https://example.com/test.png")
-            .enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    String responseString = null;
-                    try {
-                        ResponseBody body = response.body();
-                        if (body != null) {
-                            responseString = body.string();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    AGConnectAuthCredential credential = SelfBuildProvider.credentialWithToken(responseString);
-                    auth.signIn(credential).addOnSuccessListener(signInResult -> {
-                        loginSuccess();
-                    }).addOnFailureListener(e -> {
-                        showToast(e.getMessage());
-                    });
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    showToast(t.getMessage());
-                }
-            });
+        /* you must provider a Json Web Token
+         * first, you need to generate a pair of key pairs.
+         * then, upload the public key to the AGC website, use the private key to construct your JWT,
+         * and send the generated JWT to the SDK.
+         */
+        String jwtToken = "your jwt token";
+        AGConnectAuthCredential credential = SelfBuildProvider.credentialWithToken(jwtToken);
+        auth.signIn(credential).addOnSuccessListener(signInResult -> {
+            loginSuccess();
+        }).addOnFailureListener(e -> {
+            showToast(e.getMessage());
+        });
     }
 
     @Override
     public void link() {
-        retrofit.create(JWTService.class)
-            .getJwt("98341621547925918", "testId", "testDisplayName", "https://example.com/test.png")
-            .enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    String responseString = null;
-                    try {
-                        ResponseBody body = response.body();
-                        if (body != null) {
-                            responseString = body.string();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    AGConnectAuthCredential credential = SelfBuildProvider.credentialWithToken(responseString);
-                    auth.getCurrentUser().link(credential)
-                        .addOnSuccessListener(signInResult -> {
-                            showToast("link success");
-                        }).addOnFailureListener(e -> {
-                        showToast(e.getMessage());
-                    });
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    showToast(t.getMessage());
-                }
+        String jwtToken = "your jwt token";
+        AGConnectAuthCredential credential = SelfBuildProvider.credentialWithToken(jwtToken);
+        if (auth.getCurrentUser() != null) {
+            auth.getCurrentUser().link(credential)
+                .addOnSuccessListener(signInResult -> {
+                    showToast("link success");
+                }).addOnFailureListener(e -> {
+                showToast(e.getMessage());
             });
+        }
     }
 
     @Override
@@ -111,11 +66,5 @@ public class SelfBuildActivity extends ThirdBaseActivity {
         if (AGConnectAuth.getInstance().getCurrentUser() != null) {
             AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.SelfBuild_Provider);
         }
-    }
-
-    public interface JWTService {
-        @GET("/agc/cpService/getCpJwt")
-        Call<ResponseBody> getJwt(@Query("productId") String productId, @Query("uid") String uid,
-            @Query("displayName") String displayName, @Query("photeUrl") String photoUrl);
     }
 }

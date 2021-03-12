@@ -56,6 +56,7 @@ public class GooglePlayActivity extends ThirdBaseActivity {
     @Override
     public void unlink() {
         if (AGConnectAuth.getInstance().getCurrentUser() != null) {
+            // unlink google game , make sure you have already linked google game
             AGConnectAuth.getInstance().getCurrentUser().unlink(AGConnectAuthCredential.GoogleGame_Provider);
         }
     }
@@ -66,7 +67,9 @@ public class GooglePlayActivity extends ThirdBaseActivity {
         if (requestCode == SIGN_CODE) {
             GoogleSignIn.getSignedInAccountFromIntent(data)
                 .addOnSuccessListener(googleSignInAccount -> {
+                    // create google game credential
                     AGConnectAuthCredential credential = GoogleGameAuthProvider.credentialWithToken(googleSignInAccount.getServerAuthCode());
+                    // signIn with google game credential
                     auth.signIn(credential)
                         .addOnSuccessListener(signInResult -> loginSuccess())
                         .addOnFailureListener(e -> showToast(e.getMessage()));
@@ -74,8 +77,10 @@ public class GooglePlayActivity extends ThirdBaseActivity {
                 .addOnFailureListener(e -> showToast(e.getMessage()));
         } else if (requestCode == LINK_CODE) {
             GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener(googleSignInAccount -> {
+                // create google game credential
                 AGConnectAuthCredential credential = GoogleGameAuthProvider.credentialWithToken(googleSignInAccount.getServerAuthCode());
                 if (auth.getCurrentUser() != null) {
+                    // link google game credential
                     auth.getCurrentUser().link(credential).addOnSuccessListener(signInResult -> {
                         showToast("link success");
                     }).addOnFailureListener(e -> {

@@ -16,6 +16,7 @@
 
 package com.huawei.agc.quickstart.auth;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -31,8 +32,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.huawei.agconnect.auth.AGConnectAuth;
 import com.huawei.agconnect.auth.AGConnectAuthCredential;
 import com.huawei.agconnect.auth.EmailAuthProvider;
@@ -47,7 +46,7 @@ import com.huawei.hmf.tasks.TaskExecutors;
 
 import java.util.Locale;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends Activity implements View.OnClickListener {
     private TextView accountTv;
     private EditText countryCodeEdit;
     private EditText accountEdit;
@@ -156,14 +155,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 case "QQ":
                     intent = new Intent(LoginActivity.this, QQActivity.class);
                     break;
-                case "SELF":
+                case "Self Build":
                     intent = new Intent(LoginActivity.this, SelfBuildActivity.class);
                     break;
             }
             if (intent != null) {
                 startActivity(intent);
             }
-
         }
     }
 
@@ -205,10 +203,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             .build();
         if (type == Type.EMAIL) {
             String email = accountEdit.getText().toString().trim();
-            Task<VerifyCodeResult> task = EmailAuthProvider.requestVerifyCode(email, settings);
+            Task<VerifyCodeResult> task = AGConnectAuth.getInstance().requestVerifyCode(email, settings);
             task.addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<VerifyCodeResult>() {
                 @Override
                 public void onSuccess(VerifyCodeResult verifyCodeResult) {
+                    Toast.makeText(LoginActivity.this, "send email verify code success", Toast.LENGTH_SHORT).show();
                     //You need to get the verification code from your email
                 }
             }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
@@ -220,10 +219,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             String countryCode = countryCodeEdit.getText().toString().trim();
             String phoneNumber = accountEdit.getText().toString().trim();
-            Task<VerifyCodeResult> task = PhoneAuthProvider.requestVerifyCode(countryCode, phoneNumber, settings);
+            Task<VerifyCodeResult> task =  AGConnectAuth.getInstance().requestVerifyCode(countryCode, phoneNumber, settings);
             task.addOnSuccessListener(TaskExecutors.uiThread(), new OnSuccessListener<VerifyCodeResult>() {
                 @Override
                 public void onSuccess(VerifyCodeResult verifyCodeResult) {
+                    Toast.makeText(LoginActivity.this, "send phone verify code success", Toast.LENGTH_SHORT).show();
                     //You need to get the verification code from your phone
                 }
             }).addOnFailureListener(TaskExecutors.uiThread(), new OnFailureListener() {
@@ -282,6 +282,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void loginAnonymous() {
+        // signIn anonymously
         AGConnectAuth.getInstance().signInAnonymously()
             .addOnSuccessListener(new OnSuccessListener<SignInResult>() {
                 @Override
