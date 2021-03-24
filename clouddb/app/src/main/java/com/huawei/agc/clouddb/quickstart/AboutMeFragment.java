@@ -17,6 +17,8 @@
 package com.huawei.agc.clouddb.quickstart;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,8 +115,9 @@ public class AboutMeFragment extends Fragment implements LoginHelper.OnLoginEven
         if (showLoginUserInfo) {
             mHintLoginView.setVisibility(View.GONE);
             mLoginUserInfoView.setVisibility(View.VISIBLE);
-            mUserNameView.setText(signInResult.getUser().getDisplayName());
-            mAccountNameView.setText(signInResult.getUser().getDisplayName());
+            String displayName = signInResult.getUser().getDisplayName();
+            mUserNameView.setText(TextUtils.isEmpty(displayName) ? "null" : displayName);
+            mAccountNameView.setText(TextUtils.isEmpty(displayName) ? "null" : displayName);
         } else {
             mHintLoginView.setVisibility(View.VISIBLE);
             mLoginUserInfoView.setVisibility(View.GONE);
