@@ -16,6 +16,7 @@
 package com.huawei.agc.clouddb.quickstart
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,8 +91,9 @@ class AboutMeFragment : Fragment(), OnLoginEventCallBack {
             mHintLoginView!!.visibility = View.GONE
             mLoginUserInfoView!!.visibility = View.VISIBLE
             if (signInResult != null) {
-                mUserNameView!!.text = signInResult.user.displayName
-                mAccountNameView!!.text = signInResult.user.displayName
+                val displayName = signInResult.user.displayName
+                mUserNameView!!.text = if (TextUtils.isEmpty(displayName)) "null" else displayName
+                mAccountNameView!!.text = if (TextUtils.isEmpty(displayName)) "null" else displayName
             }
         } else {
             mHintLoginView!!.visibility = View.VISIBLE

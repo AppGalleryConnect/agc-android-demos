@@ -1,6 +1,6 @@
 ## AppLinking quickstart
 
-English | [中文]()
+English | [中文](./README_ZH.md)
 
 ## Table of Contents
 

@@ -1,6 +1,6 @@
 # AppLinking quickstart
 
-中文 | [English]()
+中文 | [English](./README.md)
 
 ## 目录
 
