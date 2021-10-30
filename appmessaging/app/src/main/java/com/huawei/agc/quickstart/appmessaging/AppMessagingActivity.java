@@ -24,8 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.huawei.agconnect.appmessaging.AGConnectAppMessaging;
-import com.huawei.hms.aaid.HmsInstanceId;
-
+import com.huawei.agconnect.common.api.AGCInstanceID;
 
 public class AppMessagingActivity extends FragmentActivity {
     private AGConnectAppMessaging appMessaging;
@@ -50,8 +49,8 @@ public class AppMessagingActivity extends FragmentActivity {
                  * Step 1
                  * Obtain the AAID of the device and add the AAID to the AppGallery Connect server. For details, please refer to the development guide.
                  */
-                HmsInstanceId hmsInstanceId = HmsInstanceId.getInstance(AppMessagingActivity.this);
-                String aaid = hmsInstanceId.getId();
+                AGCInstanceID agcInstanceID = AGCInstanceID.getInstance(AppMessagingActivity.this);
+                String aaid = agcInstanceID.getId();
 
                 /*
                  *  Step 2

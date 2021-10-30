@@ -19,7 +19,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.fragment.app.FragmentActivity
 import com.huawei.agconnect.appmessaging.AGConnectAppMessaging
-import com.huawei.hms.aaid.HmsInstanceId
+import com.huawei.agconnect.common.api.AGCInstanceID
 
 class AppMessagingActivity : FragmentActivity() {
     private var appMessaging: AGConnectAppMessaging? = null
@@ -40,8 +40,8 @@ class AppMessagingActivity : FragmentActivity() {
              * Step 1
              * Obtain the AAID of the device and add the AAID to the AppGallery Connect server. For details, please refer to the development guide.
              */
-            val hmsInstanceId = HmsInstanceId.getInstance(this@AppMessagingActivity)
-            val aaid = hmsInstanceId.id
+            val agcInstanceId = AGCInstanceID.getInstance(this@AppMessagingActivity)
+            val aaid = agcInstanceId.id
 
             /*
              *  Step 2
