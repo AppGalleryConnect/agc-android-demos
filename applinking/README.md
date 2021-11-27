@@ -1,6 +1,10 @@
 ## AppLinking quickstart
 
+<<<<<<< HEAD
 English | [中文](https://github.com/AppGalleryConnect/agc-demos/blob/main/Android/applinking/README_ZH.md)
+=======
+English | [中文]()
+>>>>>>> dfa4723fa944e69ada9f5f1677ee9ed3a9ba5607
 
 ## Table of Contents
 
