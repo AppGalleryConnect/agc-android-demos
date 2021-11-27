@@ -1,6 +1,6 @@
 # remoteconfig quickstart
 
-English | [中文](https://github.com/AppGalleryConnect/agc-demos/blob/main/Android/Remote%20Configuration/README_ZH.md)
+English | [中文](https://github.com/AppGalleryConnect/agc-demos/blob/main/Android/remoteconfig/README_ZH.md)
 
 ## Table of Contents
 
@@ -43,7 +43,6 @@ Data fetched by the calling the fetch API is applied upon the next app startup.
 <img src="images/fetch and apply.gif" alt="resultpage" height="600"/>
 
 **Click 'FETCH DATA AND APPLY NEXT STARTUP'</br>
-
 <img src="images/fetch and apply next start.gif" alt="resultpage" height="600"/>
 
 ## Question or issues
