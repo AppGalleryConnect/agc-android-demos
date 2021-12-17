@@ -36,7 +36,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/ripple"
                 android:gravity="center_horizontal"
-                android:text="@string/login_by_huawei_account"
+                android:text="@string/login_anonymous"
                 android:textSize="16sp" />
     </LinearLayout>
 

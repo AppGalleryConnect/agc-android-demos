@@ -24,6 +24,7 @@
     <string name="query">Query</string>
     <string name="cancel">Cancel</string>
     <string name="login_by_huawei_account">Login by Huawei account</string>
+    <string name="login_anonymous">Login by Anonymous</string>
     <string name="account">Account</string>
     <string name="password">Password</string>
     <string name="show_count">Show count</string>
@@ -34,4 +35,5 @@
     <string name="edit_book">Edit Book</string>
     <string name="search_book">Search Book</string>
     <string name="show_all">Show All</string>
+    <string name="empty_book_list">Empty book list</string>
 </resources>

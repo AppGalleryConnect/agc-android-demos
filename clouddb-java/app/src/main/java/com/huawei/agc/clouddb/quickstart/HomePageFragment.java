@@ -50,10 +50,8 @@ import com.huawei.agc.clouddb.quickstart.utils.DateUtils;
 import com.huawei.agconnect.auth.SignInResult;
 import com.huawei.agconnect.cloud.database.CloudDBZoneQuery;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -393,14 +391,13 @@ public class HomePageFragment extends Fragment
                 || BookEditFields.AUTHOR.equals(mSortState.field) || BookEditFields.PUBLISHER.equals(
                 mSortState.field))) {
                 Collections.sort(bookInfoList, (o1, o2) -> {
-                    Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
                     int result;
                     if (BookEditFields.BOOK_NAME.equals(mSortState.field)) {
-                        result = comparator.compare(o1.getBookName(), o2.getBookName());
+                        result = o1.getBookName().compareTo(o2.getBookName());
                     } else if (BookEditFields.AUTHOR.equals(mSortState.field)) {
-                        result = comparator.compare(o1.getAuthor(), o2.getAuthor());
+                        result = o1.getAuthor().compareTo(o2.getAuthor());
                     } else {
-                        result = comparator.compare(o1.getPublisher(), o2.getPublisher());
+                        result = o1.getPublisher().compareTo(o2.getPublisher());
                     }
                     if (mSortState.state == SortState.State.UP) {
                         return result;
@@ -416,7 +413,12 @@ public class HomePageFragment extends Fragment
     @Override
     public void onSubscribe(List<BookInfo> bookInfoList) {
         if (!mInSearchMode) {
-            mHandler.post(() -> mBookInfoAdapter.addBooks(bookInfoList));
+            mHandler.post(() -> {
+                if (bookInfoList.isEmpty()) {
+                    Toast.makeText(getContext(), R.string.empty_book_list, Toast.LENGTH_SHORT).show();
+                }
+                mBookInfoAdapter.addBooks(bookInfoList);
+            });
         }
     }
 

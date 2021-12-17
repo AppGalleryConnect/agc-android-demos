@@ -37,7 +37,6 @@ import com.huawei.agc.clouddb.quickstart.model.LoginHelper.OnLoginEventCallBack
 import com.huawei.agc.clouddb.quickstart.utils.DateUtils
 import com.huawei.agconnect.auth.SignInResult
 import com.huawei.agconnect.cloud.database.CloudDBZoneQuery
-import java.text.Collator
 import java.util.*
 import java.util.Collections.sort
 
@@ -333,7 +332,12 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
 
     override fun onSubscribe(bookInfoList: List<BookInfo>?) {
         if (!mInSearchMode) {
-            mHandler.post { mBookInfoAdapter!!.addBooks(bookInfoList) }
+            mHandler.post {
+                if (bookInfoList == null || bookInfoList.isEmpty()) {
+                    Toast.makeText(activity, R.string.empty_book_list, Toast.LENGTH_SHORT).show()
+                }
+                mBookInfoAdapter!!.addBooks(bookInfoList)
+            }
         }
     }
 
@@ -569,17 +573,16 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
                             || BookEditFields.AUTHOR == mSortState.field
                             || BookEditFields.PUBLISHER == mSortState.field)) {
                 sort(bookInfoList) { o1: BookInfo, o2: BookInfo ->
-                    val comparator: Comparator<Any> = Collator.getInstance(Locale.CHINA)
                     val result: Int
                     result = when (mSortState.field) {
                         BookEditFields.BOOK_NAME -> {
-                            comparator.compare(o1.bookName, o2.bookName)
+                            o1.bookName.compareTo(o2.bookName)
                         }
                         BookEditFields.AUTHOR -> {
-                            comparator.compare(o1.author, o2.author)
+                            o1.author.compareTo(o2.author)
                         }
                         else -> {
-                            comparator.compare(o1.publisher, o2.publisher)
+                            o1.publisher.compareTo(o2.publisher)
                         }
                     }
                     if (mSortState.state == SortState.State.UP) {

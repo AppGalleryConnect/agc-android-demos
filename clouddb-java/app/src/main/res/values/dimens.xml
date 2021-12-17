@@ -1,6 +1,5 @@
 <resources>
     <dimen name="app_bar_height">180dp</dimen>
-    <dimen name="book_manager_height">120dp</dimen>
     <dimen name="about_me_header_height">72dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
