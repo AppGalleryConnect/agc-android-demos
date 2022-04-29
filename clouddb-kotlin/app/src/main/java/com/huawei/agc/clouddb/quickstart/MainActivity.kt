@@ -25,11 +25,13 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.huawei.agc.clouddb.quickstart.model.LoginHelper
+import com.huawei.agc.clouddb.quickstart.model.StorageLocationHelper
 
 class MainActivity : AppCompatActivity() {
     private var mViewPager: ViewPager? = null
     private var mNavigationBar: BottomNavigationView? = null
     var loginHelper: LoginHelper? = null
+    var storageLocationHelper: StorageLocationHelper? = null
         private set
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         updateTitle()
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         }
         loginHelper = LoginHelper(this)
+        storageLocationHelper = StorageLocationHelper();
     }
 
     override fun onResume() {

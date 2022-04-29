@@ -38,5 +38,8 @@ interface BookEditFields {
         const val PUBLISH_TIME = "publishTime"
         const val SHOW_COUNT = "showCount"
         const val EDIT_MODE = "EDIT_MODE"
+
+        const val BOOK_NAME_OR = "bookNameOr"
+        const val AUTHOR_OR = "authorOr"
     }
 }

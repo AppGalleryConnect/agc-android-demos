@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.huawei.agc.clouddb.quickstart.model.BookEditFields;
 import com.huawei.agc.clouddb.quickstart.utils.DateUtils;
@@ -37,6 +38,12 @@ public class EditActivity extends AppCompatActivity {
 
     static final String ACTION_SEARCH = "com.huawei.agc.clouddb.quickstart.SEARCH";
 
+    private Button searchButton;
+    private Button addButton;
+    private EditText bookNameEdit;
+    private View fieldAuthor;
+    private EditText authorEdit;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,19 +51,22 @@ public class EditActivity extends AppCompatActivity {
         initViews();
     }
 
+    private void initControl() {
+        bookNameEdit = findViewById(R.id.edit_bookname);
+        addButton = findViewById(R.id.add);
+        searchButton = findViewById(R.id.search);
+        fieldAuthor = findViewById(R.id.field_author);
+        authorEdit = findViewById(R.id.edit_author);
+    }
+
     private void initViews() {
         Intent intent = getIntent();
         String action = intent.getAction();
-        EditText bookNameEdit = findViewById(R.id.edit_bookname);
-
-        Button addButton = findViewById(R.id.add);
-        Button searchButton = findViewById(R.id.search);
+        initControl();
         if (ACTION_ADD.equals(action)) {
             BookEditFields.EditMode editMode = BookEditFields.EditMode.valueOf(
                 intent.getStringExtra(BookEditFields.EDIT_MODE));
-            View fieldAuthor = findViewById(R.id.field_author);
             fieldAuthor.setVisibility(View.VISIBLE);
-            EditText authorEdit = findViewById(R.id.edit_author);
 
             View fieldPublisher = findViewById(R.id.field_publisher);
             fieldPublisher.setVisibility(View.VISIBLE);
@@ -114,34 +124,7 @@ public class EditActivity extends AppCompatActivity {
             });
             searchButton.setVisibility(View.GONE);
         } else if (ACTION_SEARCH.equals(action)) {
-            setTitle(R.string.search_book);
-            View fieldShowCount = findViewById(R.id.field_show_count);
-            fieldShowCount.setVisibility(View.VISIBLE);
-            EditText showCountEdit = findViewById(R.id.edit_show_count);
-
-            View fieldSearchPriceView = findViewById(R.id.field_search_price);
-            fieldSearchPriceView.setVisibility(View.VISIBLE);
-            EditText lowestPriceEdit = findViewById(R.id.lowest_price);
-            EditText highestPriceEdit = findViewById(R.id.highest_price);
-            searchButton.setOnClickListener(v -> {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(BookEditFields.BOOK_NAME, bookNameEdit.getText().toString());
-                if (!"".equals(lowestPriceEdit.getText().toString())) {
-                    resultIntent.putExtra(BookEditFields.LOWEST_PRICE,
-                        Double.parseDouble(lowestPriceEdit.getText().toString()));
-                }
-                if (!"".equals(highestPriceEdit.getText().toString())) {
-                    resultIntent.putExtra(BookEditFields.HIGHEST_PRICE,
-                        Double.parseDouble(highestPriceEdit.getText().toString()));
-                }
-                String showCount = showCountEdit.getText().toString();
-                if (!showCount.isEmpty()) {
-                    resultIntent.putExtra(BookEditFields.SHOW_COUNT, Integer.parseInt(showCount));
-                }
-                setResult(RESULT_OK, resultIntent);
-                finish();
-            });
-            addButton.setVisibility(View.GONE);
+            actionSearch();
         } else {
             // Something wrong, just return
             finish();
@@ -153,6 +136,56 @@ public class EditActivity extends AppCompatActivity {
             setResult(RESULT_CANCELED);
             finish();
         });
+    }
+
+    private void actionSearch() {
+        setTitle(R.string.search_book);
+
+        TextView bookNameOrTV = findViewById(R.id.tv_book_name_or);
+        bookNameOrTV.setVisibility(View.VISIBLE);
+        EditText bookNameET2 = findViewById(R.id.edit_bookname2);
+        bookNameET2.setVisibility(View.VISIBLE);
+
+        TextView authorOr = findViewById(R.id.tv_author_or);
+        authorOr.setVisibility(View.VISIBLE);
+        EditText authorET2 = findViewById(R.id.edit_author2);
+        authorET2.setVisibility(View.VISIBLE);
+        fieldAuthor.setVisibility(View.VISIBLE);
+
+        View fieldShowCount = findViewById(R.id.field_show_count);
+        fieldShowCount.setVisibility(View.VISIBLE);
+        EditText showCountEdit = findViewById(R.id.edit_show_count);
+
+        View fieldSearchPriceView = findViewById(R.id.field_search_price);
+        fieldSearchPriceView.setVisibility(View.VISIBLE);
+        EditText lowestPriceEdit = findViewById(R.id.lowest_price);
+        EditText highestPriceEdit = findViewById(R.id.highest_price);
+        searchButton.setOnClickListener(v -> {
+            Intent resultIntent = new Intent();
+            putExtra(resultIntent, BookEditFields.BOOK_NAME, bookNameEdit.getText().toString(), String.class);
+            putExtra(resultIntent, BookEditFields.BOOK_NAME_OR, bookNameET2.getText().toString(), String.class);
+            putExtra(resultIntent, BookEditFields.AUTHOR, authorEdit.getText().toString(), String.class);
+            putExtra(resultIntent, BookEditFields.AUTHOR_OR, authorET2.getText().toString(), String.class);
+            putExtra(resultIntent, BookEditFields.LOWEST_PRICE, lowestPriceEdit.getText().toString(), Double.class);
+            putExtra(resultIntent, BookEditFields.HIGHEST_PRICE, highestPriceEdit.getText().toString(), Double.class);
+            putExtra(resultIntent, BookEditFields.SHOW_COUNT, showCountEdit.getText().toString(), Integer.class);
+            setResult(RESULT_OK, resultIntent);
+            finish();
+        });
+        addButton.setVisibility(View.GONE);
+    }
+
+    private <T> void putExtra(Intent resultIntent, String name, String value, Class<T> tClass) {
+        if (value.trim().isEmpty()) {
+            return;
+        }
+        if (tClass.equals(Double.class)) {
+            resultIntent.putExtra(name, Double.parseDouble(value));
+        } else if (tClass.equals(Integer.class)) {
+            resultIntent.putExtra(name, Integer.parseInt(value));
+        } else {
+            resultIntent.putExtra(name, value);
+        }
     }
 
     @Override

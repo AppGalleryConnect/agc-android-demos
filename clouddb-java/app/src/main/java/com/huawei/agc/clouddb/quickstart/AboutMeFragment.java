@@ -16,6 +16,7 @@
 
 package com.huawei.agc.clouddb.quickstart;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,9 +30,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.huawei.agc.clouddb.quickstart.model.LoginHelper;
+import com.huawei.agc.clouddb.quickstart.model.StorageLocationHelper;
+import com.huawei.agconnect.AGCRoutePolicy;
 import com.huawei.agconnect.auth.SignInResult;
 
+import java.util.Objects;
+
 public class AboutMeFragment extends Fragment implements LoginHelper.OnLoginEventCallBack {
+    private final static String TAG = AboutMeFragment.class.getSimpleName();
 
     private View mHintLoginView;
 
@@ -40,6 +46,8 @@ public class AboutMeFragment extends Fragment implements LoginHelper.OnLoginEven
     private TextView mUserNameView;
 
     private TextView mAccountNameView;
+
+    private TextView mLocationView;
 
     private MainActivity mActivity;
 
@@ -97,6 +105,15 @@ public class AboutMeFragment extends Fragment implements LoginHelper.OnLoginEven
         TextView passwordDetailView = passwordView.findViewById(R.id.details);
         passwordDetailView.setText("*****");
 
+        View storageLocaltionView = mLoginUserInfoView.findViewById(R.id.storage_location);
+        TextView locationTitleView = storageLocaltionView.findViewById(R.id.title);
+        locationTitleView.setText(R.string.storage_location);
+        TextView locationDetailView = storageLocaltionView.findViewById(R.id.details);
+        locationDetailView.setText(
+            CloudDBQuickStartApplication.getRegionRoutePolicy().getRouteName());
+        locationDetailView.setOnClickListener(v -> changeStorageLocation());
+        mLocationView = locationDetailView;
+
         View logoutView = mLoginUserInfoView.findViewById(R.id.logout);
         logoutView.setOnClickListener(v -> logOut());
     }
@@ -108,6 +125,29 @@ public class AboutMeFragment extends Fragment implements LoginHelper.OnLoginEven
     private void logOut() {
         mActivity.getLoginHelper().logOut();
         onLogOut(false);
+    }
+
+    private void changeStorageLocation() {
+        AGCRoutePolicy currentPolicy = CloudDBQuickStartApplication.getRegionRoutePolicy();
+        AGCRoutePolicy targetPolicy = AGCRoutePolicy.SINGAPORE;
+        if (currentPolicy == AGCRoutePolicy.SINGAPORE) {
+            targetPolicy = AGCRoutePolicy.CHINA;
+        }
+        String message = Objects.requireNonNull(getActivity()).getResources().getString(R.string.change_storage_location_message);
+        message += targetPolicy.getRouteName() + "?";
+        AGCRoutePolicy finalTargetPolicy = targetPolicy;
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+            .setMessage(message).setTitle(R.string.change_storage_location_title)
+            .setPositiveButton(R.string.ok, ((dialog1, which) -> {
+                StorageLocationHelper locationHelper = mActivity.getStorageLocationHelper();
+                // Change storage location as you wish, need open multi-storage service first
+                // As demo, here will change to Singapore.
+                locationHelper.changeLocation(finalTargetPolicy);
+                mLocationView.setText(CloudDBQuickStartApplication.getRegionRoutePolicy().getRouteName());
+            })).setNegativeButton(R.string.cancel, ((dialog1, which) -> {
+                Log.e(TAG, "Cancel change storage location");
+            })).create();
+        dialog.show();
     }
 
     @Override

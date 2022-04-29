@@ -19,6 +19,12 @@ package com.huawei.agc.clouddb.quickstart.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.huawei.agc.clouddb.quickstart.CloudDBQuickStartApplication;
+import com.huawei.agconnect.AGCRoutePolicy;
+import com.huawei.agconnect.AGConnectInstance;
+import com.huawei.agconnect.AGConnectOptions;
+import com.huawei.agconnect.AGConnectOptionsBuilder;
+import com.huawei.agconnect.auth.AGConnectAuth;
 import com.huawei.agconnect.cloud.database.AGConnectCloudDB;
 import com.huawei.agconnect.cloud.database.CloudDBZone;
 import com.huawei.agconnect.cloud.database.CloudDBZoneConfig;
@@ -91,7 +97,19 @@ public class CloudDBZoneWrapper {
     };
 
     public CloudDBZoneWrapper() {
+        CloudDBQuickStartApplication.setRegionRoutePolicy(
+                AGConnectInstance.getInstance().getOptions().getRoutePolicy());
         mCloudDB = AGConnectCloudDB.getInstance();
+    }
+
+    public void setStorageLocation(Context context) {
+        if (mCloudDBZone != null) {
+            closeCloudDBZone();
+        }
+        AGConnectOptionsBuilder builder = new AGConnectOptionsBuilder()
+            .setRoutePolicy(CloudDBQuickStartApplication.getRegionRoutePolicy());
+        AGConnectInstance instance = AGConnectInstance.buildInstance(builder.build(context));
+        mCloudDB = AGConnectCloudDB.getInstance(instance, AGConnectAuth.getInstance());
     }
 
     /**

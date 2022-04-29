@@ -46,6 +46,7 @@ import com.huawei.agc.clouddb.quickstart.model.BookEditFields;
 import com.huawei.agc.clouddb.quickstart.model.BookInfo;
 import com.huawei.agc.clouddb.quickstart.model.CloudDBZoneWrapper;
 import com.huawei.agc.clouddb.quickstart.model.LoginHelper;
+import com.huawei.agc.clouddb.quickstart.model.StorageLocationHelper;
 import com.huawei.agc.clouddb.quickstart.utils.DateUtils;
 import com.huawei.agconnect.auth.SignInResult;
 import com.huawei.agconnect.cloud.database.CloudDBZoneQuery;
@@ -56,7 +57,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class HomePageFragment extends Fragment
-    implements CloudDBZoneWrapper.UiCallBack, LoginHelper.OnLoginEventCallBack {
+    implements CloudDBZoneWrapper.UiCallBack, LoginHelper.OnLoginEventCallBack,
+        StorageLocationHelper.StorageLocationChangeCallback {
     // Request code for clicking search menu
     private static final int REQUEST_SEARCH = 1;
 
@@ -103,6 +105,8 @@ public class HomePageFragment extends Fragment
             LoginHelper loginHelper = mActivity.getLoginHelper();
             loginHelper.addLoginCallBack(this);
             loginHelper.login();
+            StorageLocationHelper locationHelper = mActivity.getStorageLocationHelper();
+            locationHelper.addCallback(this);
         });
     }
 
@@ -173,12 +177,10 @@ public class HomePageFragment extends Fragment
     }
 
     private void processSearchAction(Intent data) {
-        CloudDBZoneQuery<BookInfo> query = CloudDBZoneQuery.where(BookInfo.class);
-        String bookName = data.getStringExtra(BookEditFields.BOOK_NAME);
-        if (!TextUtils.isEmpty(bookName)) {
-            query.contains(BookEditFields.BOOK_NAME, bookName);
-            mQueryInfo.bookName = bookName;
-        }
+        mQueryInfo.bookNameOr = data.getStringExtra(BookEditFields.BOOK_NAME_OR);
+        mQueryInfo.bookName = data.getStringExtra(BookEditFields.BOOK_NAME);
+        mQueryInfo.authorOr = data.getStringExtra(BookEditFields.AUTHOR_OR);
+        mQueryInfo.author = data.getStringExtra(BookEditFields.AUTHOR);
 
         double lowestPrice = data.getDoubleExtra(BookEditFields.LOWEST_PRICE, 0);
         double highestPrice = data.getDoubleExtra(BookEditFields.HIGHEST_PRICE, 0);
@@ -191,17 +193,11 @@ public class HomePageFragment extends Fragment
         mQueryInfo.lowestPrice = lowestPrice;
         mQueryInfo.highestPrice = highestPrice;
 
-        query.greaterThanOrEqualTo(BookEditFields.PRICE, lowestPrice);
-        if (mQueryInfo.lowestPrice != mQueryInfo.highestPrice || mQueryInfo.lowestPrice != 0.0) {
-            query.lessThanOrEqualTo(BookEditFields.PRICE, mQueryInfo.highestPrice);
-        }
-
         int showCount = data.getIntExtra(BookEditFields.SHOW_COUNT, 0);
         if (showCount > 0) {
-            query.limit(showCount);
             mQueryInfo.showCount = showCount;
         }
-
+        CloudDBZoneQuery<BookInfo> query = mQueryInfo.generalQuery();
         toggleShowAllState(true);
         mHandler.post(() -> mCloudDBZoneWrapper.queryBooks(query));
     }
@@ -461,17 +457,7 @@ public class HomePageFragment extends Fragment
 
     private void queryWithOrder() {
         invalidateViewInNormalMode();
-        CloudDBZoneQuery<BookInfo> query = CloudDBZoneQuery.where(BookInfo.class);
-        if (!mQueryInfo.bookName.isEmpty()) {
-            query.contains(BookEditFields.BOOK_NAME, mQueryInfo.bookName);
-        }
-        query.greaterThanOrEqualTo(BookEditFields.PRICE, mQueryInfo.lowestPrice);
-        if (mQueryInfo.lowestPrice != mQueryInfo.highestPrice || mQueryInfo.lowestPrice != 0.0) {
-            query.lessThanOrEqualTo(BookEditFields.PRICE, mQueryInfo.highestPrice);
-        }
-        if (mQueryInfo.showCount > 0) {
-            query.limit(mQueryInfo.showCount);
-        }
+        CloudDBZoneQuery<BookInfo> query = mQueryInfo.generalQuery();
         if (mSortState.state == SortState.State.UP) {
             query.orderByAsc(mSortState.field);
         } else {
@@ -492,6 +478,14 @@ public class HomePageFragment extends Fragment
     @Override
     public void onLogOut(boolean showLoginUserInfo) {
         Toast.makeText(mActivity.getApplicationContext(), "Sign in from agc failed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStorageLocationChanged() {
+        //Should create objet type and open CloudDBZone after change storage location
+        mCloudDBZoneWrapper.setStorageLocation(this.getContext());
+        mCloudDBZoneWrapper.createObjectType();
+        mCloudDBZoneWrapper.openCloudDBZoneV2();
     }
 
     private static final class SortState {
@@ -631,32 +625,60 @@ public class HomePageFragment extends Fragment
 
     private static final class ViewHolder {
         CheckBox checkBox;
-
         TextView bookNameView;
-
         TextView authorView;
-
         TextView priceView;
-
         TextView publisherView;
-
         TextView publishTimeView;
     }
 
     private static final class QueryInfo {
         String bookName = "";
-
+        String bookNameOr = "";
+        String author = "";
+        String authorOr = "";
         double lowestPrice = 0.0;
-
         double highestPrice = 0.0;
-
         int showCount = 0;
 
         void clean() {
             bookName = "";
+            bookNameOr = "";
             lowestPrice = 0.0;
             highestPrice = 0.0;
             showCount = 0;
+            author = "";
+            authorOr = "";
+        }
+
+        CloudDBZoneQuery<BookInfo> generalQuery() {
+            CloudDBZoneQuery<BookInfo> query = CloudDBZoneQuery.where(BookInfo.class);
+            jointFieldWithOr(query, bookNameOr, bookName, BookEditFields.BOOK_NAME);
+            jointFieldWithOr(query, authorOr, author, BookEditFields.AUTHOR);
+            query.greaterThanOrEqualTo(BookEditFields.PRICE, lowestPrice);
+            if (lowestPrice != highestPrice || lowestPrice != 0.0) {
+                query.lessThanOrEqualTo(BookEditFields.PRICE, highestPrice);
+            }
+            if (showCount > 0) {
+                query.limit(showCount);
+            }
+            return query;
+        }
+
+        void jointFieldWithOr(CloudDBZoneQuery<BookInfo> query, String fieldOrValue, String fieldValue, String fieldName) {
+            if (TextUtils.isEmpty(fieldValue) && !TextUtils.isEmpty(fieldOrValue)) {
+                query.contains(fieldName, fieldOrValue);
+                return;
+            }
+            if (!TextUtils.isEmpty(fieldOrValue)) {
+                query.beginGroup();
+            }
+            if (!TextUtils.isEmpty(fieldValue)) {
+                query.contains(fieldName, fieldValue);
+            }
+            if (!TextUtils.isEmpty(fieldOrValue)) {
+                query.or().contains(fieldName, fieldOrValue).endGroup();
+            }
         }
     }
 }

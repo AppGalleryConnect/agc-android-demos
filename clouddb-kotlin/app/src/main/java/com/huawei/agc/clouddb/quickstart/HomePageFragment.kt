@@ -34,13 +34,16 @@ import com.huawei.agc.clouddb.quickstart.model.BookInfo
 import com.huawei.agc.clouddb.quickstart.model.CloudDBZoneWrapper
 import com.huawei.agc.clouddb.quickstart.model.CloudDBZoneWrapper.UiCallBack
 import com.huawei.agc.clouddb.quickstart.model.LoginHelper.OnLoginEventCallBack
+import com.huawei.agc.clouddb.quickstart.model.StorageLocationHelper
 import com.huawei.agc.clouddb.quickstart.utils.DateUtils
 import com.huawei.agconnect.auth.SignInResult
 import com.huawei.agconnect.cloud.database.CloudDBZoneQuery
 import java.util.*
 import java.util.Collections.sort
 
-class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
+
+class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack,
+    StorageLocationHelper.StorageLocationChangeCallback {
     // Store current state of sort order
     private val mSortState = SortState()
     private val mQueryInfo = QueryInfo()
@@ -61,6 +64,8 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
             val loginHelper = mActivity!!.loginHelper
             loginHelper!!.addLoginCallBack(this)
             loginHelper.login()
+            val locationHelper = mActivity!!.storageLocationHelper
+            locationHelper!!.addCallback(this)
         }
     }
 
@@ -124,12 +129,11 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
     }
 
     private fun processSearchAction(data: Intent?) {
-        val query = CloudDBZoneQuery.where(BookInfo::class.java)
-        val bookName = data!!.getStringExtra(BookEditFields.BOOK_NAME)
-        if (!TextUtils.isEmpty(bookName)) {
-            query.contains(BookEditFields.BOOK_NAME, bookName!!)
-            mQueryInfo.bookName = bookName
-        }
+        mQueryInfo.bookNameOr = data!!.getStringExtra(BookEditFields.BOOK_NAME_OR);
+        mQueryInfo.bookName = data.getStringExtra(BookEditFields.BOOK_NAME);
+        mQueryInfo.authorOr = data.getStringExtra(BookEditFields.AUTHOR_OR);
+        mQueryInfo.author = data.getStringExtra(BookEditFields.AUTHOR);
+
         var lowestPrice = data.getDoubleExtra(BookEditFields.LOWEST_PRICE, 0.0)
         var highestPrice = data.getDoubleExtra(BookEditFields.HIGHEST_PRICE, 0.0)
         if (lowestPrice > highestPrice) {
@@ -139,17 +143,14 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
         }
         mQueryInfo.lowestPrice = lowestPrice
         mQueryInfo.highestPrice = highestPrice
-        query.greaterThanOrEqualTo(BookEditFields.PRICE, lowestPrice)
-        if (mQueryInfo.lowestPrice != mQueryInfo.highestPrice || mQueryInfo.lowestPrice != 0.0) {
-            query.lessThanOrEqualTo(BookEditFields.PRICE, mQueryInfo.highestPrice)
-        }
+
         val showCount = data.getIntExtra(BookEditFields.SHOW_COUNT, 0)
         if (showCount > 0) {
-            query.limit(showCount)
             mQueryInfo.showCount = showCount
         }
+        val query = mQueryInfo.generalQuery()
         toggleShowAllState(true)
-        mHandler.post { mCloudDBZoneWrapper.queryBooks(query) }
+        mHandler.post { mCloudDBZoneWrapper.queryBooks(query!!) }
     }
 
     private fun processAddAction(data: Intent?) {
@@ -377,23 +378,13 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
 
     private fun queryWithOrder() {
         invalidateViewInNormalMode()
-        val query = CloudDBZoneQuery.where(BookInfo::class.java)
-        if (mQueryInfo.bookName!!.isNotEmpty()) {
-            query.contains(BookEditFields.BOOK_NAME, mQueryInfo.bookName!!)
-        }
-        query.greaterThanOrEqualTo(BookEditFields.PRICE, mQueryInfo.lowestPrice)
-        if (mQueryInfo.lowestPrice != mQueryInfo.highestPrice || mQueryInfo.lowestPrice != 0.0) {
-            query.lessThanOrEqualTo(BookEditFields.PRICE, mQueryInfo.highestPrice)
-        }
-        if (mQueryInfo.showCount > 0) {
-            query.limit(mQueryInfo.showCount)
-        }
+        val query = mQueryInfo.generalQuery();
         if (mSortState.state == SortState.State.UP) {
-            query.orderByAsc(mSortState.field!!)
+            query?.orderByAsc(mSortState.field!!)
         } else {
-            query.orderByDesc(mSortState.field!!)
+            query?.orderByDesc(mSortState.field!!)
         }
-        mHandler.post { mCloudDBZoneWrapper.queryBooks(query) }
+        mHandler.post { mCloudDBZoneWrapper.queryBooks(query!!) }
     }
 
     override fun onLogin(showLoginUserInfo: Boolean, signInResult: SignInResult?) {
@@ -406,6 +397,13 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
 
     override fun onLogOut(showLoginUserInfo: Boolean) {
         Toast.makeText(mActivity!!.applicationContext, "Sign in from agc failed", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStorageLocationChanged() {
+        //Should create objet type and open CloudDBZone after change storage location
+        mCloudDBZoneWrapper.setStorageLocation(this.context)
+        mCloudDBZoneWrapper.createObjectType()
+        mCloudDBZoneWrapper.openCloudDBZoneV2()
     }
 
     private class SortState {
@@ -544,14 +542,48 @@ class HomePageFragment : Fragment(), UiCallBack, OnLoginEventCallBack {
 
     private class QueryInfo {
         var bookName: String? = ""
+        var bookNameOr: String? = ""
+        var author: String? = ""
+        var authorOr: String? = ""
         var lowestPrice = 0.0
         var highestPrice = 0.0
         var showCount = 0
+
         fun clean() {
             bookName = ""
             lowestPrice = 0.0
             highestPrice = 0.0
             showCount = 0
+        }
+
+        fun generalQuery(): CloudDBZoneQuery<BookInfo>? {
+            val query = CloudDBZoneQuery.where(BookInfo::class.java)
+            jointFieldWithOr(query, bookNameOr, bookName, BookEditFields.BOOK_NAME)
+            jointFieldWithOr(query, authorOr, author, BookEditFields.AUTHOR)
+            query.greaterThanOrEqualTo(BookEditFields.PRICE, lowestPrice)
+            if (lowestPrice != highestPrice || lowestPrice != 0.0) {
+                query.lessThanOrEqualTo(BookEditFields.PRICE, highestPrice)
+            }
+            if (showCount > 0) {
+                query.limit(showCount)
+            }
+            return query
+        }
+
+        fun jointFieldWithOr(query: CloudDBZoneQuery<BookInfo?>, fieldOrValue: String?, fieldValue: String?, fieldName: String?) {
+            if (TextUtils.isEmpty(fieldValue) && !TextUtils.isEmpty(fieldOrValue)) {
+                query.contains(fieldName!!, fieldOrValue!!)
+                return
+            }
+            if (!TextUtils.isEmpty(fieldOrValue)) {
+                query.beginGroup()
+            }
+            if (!TextUtils.isEmpty(fieldValue)) {
+                query.contains(fieldName!!, fieldValue!!)
+            }
+            if (!TextUtils.isEmpty(fieldOrValue)) {
+                query.or().contains(fieldName!!, fieldOrValue!!).endGroup()
+            }
         }
     }
 

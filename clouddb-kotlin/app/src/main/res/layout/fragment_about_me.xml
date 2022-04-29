@@ -62,6 +62,10 @@
                 android:id="@+id/password"
                 layout="@layout/account_item_view" />
 
+        <include
+            android:id="@+id/storage_location"
+            layout="@layout/account_item_view" />
+
         <TextView
                 android:id="@+id/logout"
                 android:layout_width="match_parent"

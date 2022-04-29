@@ -19,6 +19,8 @@ package com.huawei.agc.clouddb.quickstart;
 import android.app.Application;
 
 import com.huawei.agc.clouddb.quickstart.model.CloudDBZoneWrapper;
+import com.huawei.agconnect.AGCRoutePolicy;
+import com.huawei.agconnect.AGConnectInstance;
 
 public class CloudDBQuickStartApplication extends Application {
     @Override
@@ -30,5 +32,15 @@ public class CloudDBQuickStartApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+    }
+
+    private static AGCRoutePolicy regionRoutePolicy = AGCRoutePolicy.CHINA; // Set default region policy
+
+    public static AGCRoutePolicy getRegionRoutePolicy() {
+        return regionRoutePolicy;
+    }
+
+    public static void setRegionRoutePolicy(AGCRoutePolicy regionRoutePolicy) {
+        CloudDBQuickStartApplication.regionRoutePolicy = regionRoutePolicy;
     }
 }

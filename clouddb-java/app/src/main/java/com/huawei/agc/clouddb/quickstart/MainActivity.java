@@ -32,6 +32,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.huawei.agc.clouddb.quickstart.model.LoginHelper;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.huawei.agc.clouddb.quickstart.model.StorageLocationHelper;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mNavigationBar;
 
     private LoginHelper mLoginHelper;
+
+    private StorageLocationHelper mStorageLocationHelper;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
         = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         mNavigationBar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         mLoginHelper = new LoginHelper(this);
+
+        mStorageLocationHelper = new StorageLocationHelper();
     }
 
     @Override
@@ -110,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
 
     protected LoginHelper getLoginHelper() {
         return mLoginHelper;
+    }
+
+    protected StorageLocationHelper getStorageLocationHelper() {
+        return mStorageLocationHelper;
     }
 
     protected void hideNavigationBar() {

@@ -33,6 +33,8 @@ public interface BookEditFields {
 
     String EDIT_MODE = "EDIT_MODE";
 
+    String BOOK_NAME_OR = "bookNameOr";
+    String AUTHOR_OR = "authorOr";
     /**
      * To mark it's in add mode or in modify mode
      */

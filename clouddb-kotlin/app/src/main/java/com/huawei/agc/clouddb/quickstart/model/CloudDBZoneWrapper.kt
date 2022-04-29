@@ -17,6 +17,10 @@ package com.huawei.agc.clouddb.quickstart.model
 
 import android.content.Context
 import android.util.Log
+import com.huawei.agc.clouddb.quickstart.CloudDBQuickStartApplication
+import com.huawei.agconnect.AGConnectInstance
+import com.huawei.agconnect.AGConnectOptionsBuilder
+import com.huawei.agconnect.auth.AGConnectAuth
 import com.huawei.agconnect.cloud.database.*
 import com.huawei.agconnect.cloud.database.exceptions.AGConnectCloudDBException
 import java.util.*
@@ -27,7 +31,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  * Proxying implementation of CloudDBZone.
  */
 class CloudDBZoneWrapper {
-    private val mCloudDB: AGConnectCloudDB = AGConnectCloudDB.getInstance()
+    private var mCloudDB: AGConnectCloudDB = AGConnectCloudDB.getInstance()
     private var mCloudDBZone: CloudDBZone? = null
     private var mRegister: ListenerHandler? = null
     private var mConfig: CloudDBZoneConfig? = null
@@ -64,6 +68,16 @@ class CloudDBZoneWrapper {
         } finally {
             cloudDBZoneSnapshot.release()
         }
+    }
+
+    fun setStorageLocation(context: Context?) {
+        if (mCloudDBZone != null) {
+            closeCloudDBZone()
+        }
+        val builder = AGConnectOptionsBuilder()
+            .setRoutePolicy(CloudDBQuickStartApplication.regionRoutePolicy)
+        val instance = AGConnectInstance.buildInstance(builder.build(context))
+        mCloudDB = AGConnectCloudDB.getInstance(instance, AGConnectAuth.getInstance())
     }
 
     /**

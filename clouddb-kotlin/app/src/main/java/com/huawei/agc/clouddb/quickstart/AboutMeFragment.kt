@@ -15,21 +15,28 @@
  */
 package com.huawei.agc.clouddb.quickstart
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.huawei.agc.clouddb.quickstart.model.LoginHelper.OnLoginEventCallBack
+import com.huawei.agc.clouddb.quickstart.model.StorageLocationHelper
+import com.huawei.agconnect.AGCRoutePolicy
 import com.huawei.agconnect.auth.SignInResult
+import java.util.*
 
 class AboutMeFragment : Fragment(), OnLoginEventCallBack {
+    private val TAG : String? = AboutMeFragment::class.simpleName
     private var mHintLoginView: View? = null
     private var mLoginUserInfoView: View? = null
     private var mUserNameView: TextView? = null
     private var mAccountNameView: TextView? = null
+    private var mLocationView : TextView? = null
     private var mActivity: MainActivity? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +79,14 @@ class AboutMeFragment : Fragment(), OnLoginEventCallBack {
             passwordTitleView.setText(R.string.password)
             val passwordDetailView = passwordView.findViewById<TextView>(R.id.details)
             passwordDetailView.text = "*****"
+            val storageLocaltionView =
+                mLoginUserInfoView!!.findViewById<View>(R.id.storage_location)
+            val locationTitleView = storageLocaltionView.findViewById<TextView>(R.id.title)
+            locationTitleView.setText(R.string.storage_location)
+            val locationDetailView = storageLocaltionView.findViewById<TextView>(R.id.details)
+            locationDetailView.setText(CloudDBQuickStartApplication.regionRoutePolicy.routeName)
+            locationDetailView.setOnClickListener { changeStorageLocation() }
+            mLocationView = locationDetailView
             val logoutView = findViewById<View>(R.id.logout)
             logoutView.setOnClickListener { logOut() }
         }
@@ -84,6 +99,30 @@ class AboutMeFragment : Fragment(), OnLoginEventCallBack {
     private fun logOut() {
         mActivity!!.loginHelper!!.logOut()
         onLogOut(false)
+    }
+
+    private fun changeStorageLocation() {
+        val currentPolicy: AGCRoutePolicy = CloudDBQuickStartApplication.regionRoutePolicy
+        var targetPolicy = AGCRoutePolicy.SINGAPORE
+        if (currentPolicy === AGCRoutePolicy.SINGAPORE) {
+            targetPolicy = AGCRoutePolicy.CHINA
+        }
+        var message =
+            Objects.requireNonNull(activity)?.resources?.getString(R.string.change_storage_location_message)
+        message += targetPolicy.routeName + "?"
+        val finalTargetPolicy = targetPolicy
+        val dialog = AlertDialog.Builder(activity)
+            .setMessage(message).setTitle(R.string.change_storage_location_title)
+            .setPositiveButton(R.string.ok) { dialog1, which ->
+                val locationHelper = mActivity!!.storageLocationHelper
+                // Change storage location as you wish, need open multi-storage service first
+                // As demo, here will change to Singapore.
+                locationHelper!!.changeLocation(finalTargetPolicy)
+                mLocationView?.text = CloudDBQuickStartApplication.regionRoutePolicy.routeName
+            }.setNegativeButton(R.string.cancel) { dialog1, which ->
+                Log.e(TAG, "Cancel change storage location")
+            }.create()
+        dialog.show()
     }
 
     override fun onLogin(showLoginUserInfo: Boolean, signInResult: SignInResult?) {

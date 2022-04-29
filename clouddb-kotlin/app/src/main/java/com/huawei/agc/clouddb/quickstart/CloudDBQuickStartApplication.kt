@@ -17,11 +17,20 @@ package com.huawei.agc.clouddb.quickstart
 
 import android.app.Application
 import com.huawei.agc.clouddb.quickstart.model.CloudDBZoneWrapper
+import com.huawei.agconnect.AGCRoutePolicy
 
 class CloudDBQuickStartApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         CloudDBZoneWrapper.initAGConnectCloudDB(this)
+    }
+
+    companion object {
+        var regionRoutePolicy : AGCRoutePolicy = AGCRoutePolicy.CHINA
+            get() = field
+            set(value) {
+                field = value
+            }
     }
 
 }

@@ -18,24 +18,42 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="visible"
-                android:weightSum="7"
+
                 app:layout_constraintTop_toBottomOf="parent">
 
             <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/book_name" />
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="@string/book_name" />
 
             <EditText
-                    android:id="@+id/edit_bookname"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:importantForAutofill="no"
-                    android:inputType="text"
-                    android:labelFor="@id/edit_bookname"
-                    android:maxLength="20" />
+                android:id="@+id/edit_bookname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:labelFor="@id/edit_bookname"
+                android:maxLength="20" />
+
+            <TextView
+                android:id="@+id/tv_book_name_or"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/or"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/edit_bookname2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:labelFor="@id/edit_bookname"
+                android:visibility="gone"
+                android:maxLength="20" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,25 +62,42 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:weightSum="7"
+                android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="parent">
 
             <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="@string/author" />
 
             <EditText
                     android:id="@+id/edit_author"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
                     android:inputType="text"
                     android:labelFor="@id/edit_author"
                     android:maxLength="20" />
+
+            <TextView
+                android:id="@+id/tv_author_or"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/or"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/edit_author2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:labelFor="@id/edit_author"
+                android:visibility="gone"
+                android:maxLength="20" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,18 +107,16 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="7"
                 app:layout_constraintTop_toBottomOf="parent">
 
             <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="@string/price" />
 
             <EditText
                     android:id="@+id/edit_price"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
@@ -99,18 +132,16 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="7"
                 app:layout_constraintTop_toBottomOf="parent">
 
             <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="@string/price" />
 
             <EditText
                     android:id="@+id/lowest_price"
-                    android:layout_width="45dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2.5"
                     android:importantForAutofill="no"
@@ -127,7 +158,7 @@
 
             <EditText
                     android:id="@+id/highest_price"
-                    android:layout_width="45dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2.5"
                     android:importantForAutofill="no"
@@ -143,18 +174,16 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="7"
                 app:layout_constraintTop_toBottomOf="parent">
 
             <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="@string/publisher" />
 
             <EditText
                     android:id="@+id/edit_publisher"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
@@ -170,18 +199,16 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="7"
                 app:layout_constraintTop_toBottomOf="parent">
 
             <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="@string/publish_time" />
 
             <EditText
                     android:id="@+id/edit_publish_time"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:clickable="false"
@@ -199,18 +226,16 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="7"
                 app:layout_constraintTop_toBottomOf="parent">
 
             <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="@string/show_count" />
 
             <EditText
                     android:id="@+id/edit_show_count"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:importantForAutofill="no"
