@@ -27,10 +27,10 @@
 ## 快速入门
 
 在运行quickstart前，您需要
-1、如果没有华为开发者联盟帐号，需要先[注册账号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
-2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Guides/agc-get-started)网站创建应用，软件包类型选择“APK(Android应用)”。
-3、在AppGallery Connect 网站上开通崩溃服务，开发-》质量-》崩溃服务（由于崩溃服务上报崩溃事件时集成了华为分析服务的能力，集成Crash SDK前必须开通华为分析服务）。
-4、在AppGallery Connect 网站上下载agconnect-services.json 文件，并拷贝agconnect-services.json文件到app/kotlin-app根目录下。
+1、如果没有华为开发者联盟帐号，需要先[注册帐号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
+2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/)网站创建应用，软件包类型选择“APK(Android应用)”。
+3、在AppGallery Connect 网站上开通崩溃服务，质量-> 崩溃服务（由于崩溃服务上报崩溃事件时集成了华为分析服务的能力，集成Crash SDK前必须开通华为分析服务）。
+4、在AppGallery Connect 网站上下载agconnect-services.json文件，并拷贝agconnect-services.json文件到Android Studio项目的应用级根目录下。
 
 ## 示例代码
 

@@ -1,31 +1,40 @@
 # Cloud DB Quick Start
 
+English | [中文](https://gitee.com/appgallery_connect/agc-android-demos/blob/master/clouddb-kotlin/README_zh.md)
+
+## Table of Contents
+
+ * [Introduction](#introduction)
+ * [Getting Started](#getting-started)
+ * [Result](#result)
+ * [License](#license)
+ 
 ## Introduction
 
 This project is a quick start sample developed using Cloud DB APIs.
 
-## Quick Start
+## Getting Started
 
-- On the [AppGallery Connect](https://developer.huawei.com/consumer/en/service/josp/agc/index.html#/myApp) page, create a project and add an application with a package named **com.huawei.agc.clouddb.xxxx**.
+1. On the [AppGallery Connect](https://developer.huawei.com/consumer/en/service/josp/agc/index.html#/myApp) page, create a project, and add an app with a package named **com.huawei.agc.clouddb.xxxx**.
 
-- Click **Auth Service** on the navigation bar and enable authentication using an anonymous account.
+2. Go to **Auth Service** and enable Auth Service and the anonymous account authentication mode.
 
-- Click **Cloud DB** on the navigation bar and enable database service. Then, perform the following operations:
+3. Go to **Cloud DB** and enable Cloud DB. Then, perform the following operations:
 
-    (1) Create a schema by importing a template file stored in **CloudDBQuickStart_1.json** in the root directory of the project. Alternatively, create a schema named **BookInfo** and ensure that all fields must be the same as those in **BookInfo.java** in the project.
+    3.1 Create an object type by importing the template file **CloudDBQuickStart_1.json** in the root directory of the project. Alternatively, create an object type named **BookInfo** and ensure that all fields must be the same as those in **BookInfo.java** in the project.
 
-    (2) Create a Cloud DB zone. On the **Cloud DB Zone** tab page, click **Add** to create a Cloud DB zone named **QuickStartDemo**.
+    3.2 Click the **Cloud DB Zones** tab, and click **Add** to create a Cloud DB zone named **QuickStartDemo**.
 
-- Click **Project Settings** on the navigation bar, download the **agconnect-services.json** file, and add it to the app directory.
+4. Go to **Project settings** > **General information**, download the **agconnect-services.json** file, and copy this file to the **app** directory.
 
-- Use Android Studio to open the project.
+5. Use Android Studio to open the project.
 
-- Run the sample on your Android device.
+6. Run the sample on your Android device.
 
-## Running Result
+## Result
 
 <img src="./screenshot.jpg" height="550" width="320" />
 
 ## License
 
-Cloud DB Quick Start is licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+The sample code is licensed under the [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0).

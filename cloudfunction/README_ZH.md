@@ -1,3 +1,18 @@
+## function quickstart
+
+中文 | [English](https://github.com/AppGalleryConnect/agc-demos/blob/main/Android/cloudfunction/README.md)
+
+
+## 目录
+
+- [简介](#简介)
+- [环境要求](#环境要求)
+- [快速入门](#快速入门)
+- [示例代码](#示例代码)
+- [示例效果](#示例效果) 
+- [技术支持](#技术支持)
+- [授权许可](#授权许可)  
+
 
 ## 简介
 
@@ -15,17 +30,17 @@
 
 在运行quickstart前，您需要
 1、如果没有华为开发者联盟帐号，需要先[注册账号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
-2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Guides/agc-get-started)网站创建应用，软件包类型选择“APK(Android应用)”。
+2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/en/service/josp/agc/index.html)网站创建应用，软件包类型选择“APK(Android应用)”。
 3、创建云函数（详见开发指南）：
   3.1 登录AppGallery Connect，点击“我的应用”，点击需要启动认证服务的应用所属的产品。
   3.2 开发 > 构建 > 云函数，进入“Cloud Functions”页面
   3.3 在“函数”页面，点击“创建函数”。
   3.4 在创建界面中，完成函数定义。
   3.5 函数创建完成后单击“保存”。
- 4、在AppGallery Connect网站上下载agconnect-services.json 文件，并放在应用级根目录下(例如：quickstart是function/app/)。在编译APK之前，请确保项目中包含agconnect-services.json文件，否则会编译出错。
+4、在AppGallery Connect网站上下载agconnect-services.json文件，并放在应用级根目录下(例如：quickstart是function/app/)。在编译APK之前，请确保项目中包含agconnect-services.json文件，否则会编译出错。
 
 ## 示例代码
-   sdk 支持对云函数的调用并返回调用结果。
+   SDK支持对云函数的调用并返回调用结果。支持对云函数的调用并返回调用结果。
    代码：src\main\java\com\huawei\agc\quickstart\MainActivity.java
 
 ## 示例效果
@@ -43,5 +58,5 @@
 
 ## 授权许可
 
-该示例代码经过[Apache 2.0 授权许可](http://www.apache.org/licenses/LICENSE-2.0)。
+该示例代码经过[Apache 2.0授权许可](http://www.apache.org/licenses/LICENSE-2.0)。
 

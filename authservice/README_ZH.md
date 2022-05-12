@@ -1,3 +1,16 @@
+# auth quickstart
+
+中文 | [English]()
+
+## 目录
+
+- [简介](#简介)
+- [环境要求](#环境要求)
+- [快速入门](#快速入门)
+- [示例代码](#示例代码)
+- [示例效果](#示例效果) 
+- [技术支持](#技术支持)
+- [授权许可](#授权许可)
 
 ## 简介
 
@@ -14,10 +27,10 @@ AppGallery Connect认证服务支持多种认证方式，并与其他Serverless�
 
 在运行quickstart前，您需要
 1、如果没有华为开发者联盟帐号，需要先[注册账号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
-2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Guides/agc-get-started)网站创建应用，软件包类型选择“APK(Android应用)”。
+2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/)网站创建应用，软件包类型选择“APK(Android应用)”。
 3、启动认证方式：
-      3.1 登录AppGallery Connect，点击“我的应用”，点击需要启动认证服务的应用所属的产品。
-      3.2 点击“开发”页签，导航选择“Serverless > 认证服务”。如果首次使用认证服务，请点击“立即开通”开通服务。
+      3.1 登录AppGallery Connect，点击“我的项目”，在项目列表中找到需要开通认证服务的项目。
+      3.2 选择“构建 > 认证服务”，进入认证服务的页面。如果首次使用认证服务，点击“立即开通”开通服务。
       3.3 点击需要启动的认证方式所在行的“启用”。
       3.4 如果有些认证方式需要填写相关信息，请参照开发指南完成信息得配置。
  4、在AppGallery Connect网站上下载agconnect-services.json 文件，并放在应用级根目录下(例如：quickstart是auth/app/)。在编译APK之前，请确保项目中包含agconnect-services.json文件，否则会编译出错。
@@ -40,7 +53,7 @@ quickstart 支持如下几种接入方式：
 
 5. QQ
 代码：src\main\java\com\huawei\agc\quickstart\auth\QQActivity.java
-如果需要集成QQ帐号，开发者可以先集成QQ帐号接入SDK（具体参考：https://wiki.connect.qq.com/qq%E7%99%BB%E5%BD%95）
+如果需要集成QQ帐号，开发者可以先集成QQ帐号接入SDK
 
 6. 自建账户
 代码：src\main\java\com\huawei\agc\quickstart\auth\SelfBuildActivity.java

@@ -9,29 +9,26 @@ English | [中文]()
 ## Table of Contents
 
  * [Introduction](#Introduction)
- * [Preparing the Environments](#preparing-the-environments)
+ * [Environment Requirements](#environment-requirements)
  * [Getting Started](#getting-started)
  * [Sample Code](#sample-Code)
  * [Result](#result)
- * [Question or issues](#question-or-issues)
+ * [Technical Support](#technical-support)
  * [License](#license)
 
 ## Introduction
 App Linking allows you to create cross-platform links that can work as defined regardless of whether your app has been installed by a user. When a user taps the link on an Android or iOS device, the user will be redirected to the specified in-app content. If a user taps the link in a browser, the user will be redirected to the same content of the web version.
 
-## Preparing the Environments
+## Environment Requirements
 * A computer with Android Studio installed for app development
-* A device or emulator in Android Studio running Android 4.2 or a later version 
+* A device or an emulator in Android Studio running Android 4.2 or a later version 
 
 ## Getting Started
-
-Before running the quickstart app, you need to:
-
-1. If you do not have a HUAWEI Developer account, you need to [register an account](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148) and pass identity verification.
-2. Use your account to sign in to [AppGallery Connect](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Guides/agc-get-started), create an app, and set Package type to APK (Android app).
-3. Enable AppLinking. (For details, please refer to the development guide.)
-4. Select Project Settings,download the agconnect-services.json file from AppGallery Connect and copy the agconnect-services.json file to the app root directory.
-5. Create a link prefix in AppLinking and copy and replace DOMAIN_URI_PREFIX in MainActivity.
+1. Check whether you have a HUAWEI ID. If not, [register one](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148) and pass identity verification.
+2. Use your account to sign in to [AppGallery Connect](https://developer.huawei.com/consumer/en/service/josp/agc/index.html#/), create an app, and set **Package type** to **APK (Android app)**.
+3. Enable [App Linking](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-applinking-introduction-0000001054143215).
+4. Go to **Project settings** > **General information**, download the **agconnect-services.json** file, and copy this file to the app's module directory.
+5. Create a link prefix in App Linking and replace the value of **DOMAIN_URI_PREFIX** in MainActivity with this prefix.
 
 ## Sample Code
 
@@ -44,12 +41,12 @@ Sample code: src\main\java\com\huawei\agc\quickstart\DetailActivity.java
 ## Result
 
 
-## Question or issues
-If you have questions about how to use AppGallery Connect Demos, try the following options:  
-* [Stack Overflow](https://stackoverflow.com/users/14194729/appgallery-connect) is the best place for any programming questions. Be sure to tag your question with appgallery.  
-* [Huawei Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101188387844930001) AppGallery Module is great for general questions, or seeking recommendations and opinions.
+## Technical Support
+If you have any questions about the sample code, try the following:  
+- Visit [Stack Overflow](https://stackoverflow.com/users/14194729/appgallery-connect), submit your questions, and tag them with `AppGallery`. Huawei experts will answer your questions.  
+- Visit the AppGallery section in the [HUAWEI Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101188387844930001) and communicate with other developers.
 
-If you run into a bug in our samples, please submit an [issue](https://github.com/AppGalleryConnect/agc-demos/issues) to the Repository. Even better you can submit a [Pull Request](https://github.com/AppGalleryConnect/agc-demos/pulls) with a fix.
+If you encounter any issues when using the sample code, submit your [issues](https://github.com/AppGalleryConnect/agc-demos/issues) or submit a [pull request](https://github.com/AppGalleryConnect/agc-demos/pulls).
 
 ## License
-quickstart is licensed under the [Apache License, version 2.0] (http://www.apache.org/licenses/LICENSE-2.0).
+The sample code is licensed under the [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0).

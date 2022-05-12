@@ -32,6 +32,8 @@ import com.huawei.hmf.tasks.OnSuccessListener;
 public class MainActivity extends AppCompatActivity {
     private TextView shortTextView;
     private TextView longTextView;
+    private String shortText;
+    private String longText;
 
     private static final String DOMAIN_URI_PREFIX = "https://example.drcn.agconnect.link";
     private static final String DEEP_LINK = "agckit://example.agconnect.cn/detail?id=123";
@@ -112,14 +114,17 @@ public class MainActivity extends AppCompatActivity {
                                         .build());
         builder.buildShortAppLinking(ShortAppLinking.LENGTH.SHORT)
                 .addOnSuccessListener(shortAppLinking -> {
-                    shortTextView.setText(shortAppLinking.getShortUrl().toString());
+                    shortText = shortAppLinking.getShortUrl().toString();
+                    shortTextView.setText(shortText);
+                    Log.i("MainActivity", "createAppLinking of shortText: "+shortText);
                 })
                 .addOnFailureListener(
                         e -> {
                             showError(e.getMessage());
                         });
-
-        longTextView.setText(builder.buildAppLinking().getUri().toString());
+        longText = builder.buildAppLinking().getUri().toString();
+        longTextView.setText(longText);
+        Log.i("MainActivity", "createAppLinking of shortText: "+shortText);
     }
 
     private void shareLink(String appLinking) {

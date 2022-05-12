@@ -15,7 +15,7 @@
 
 ## 简介
 
-AppGallery Connect应用内消息服务，实现用户使用应用时，向活跃用户发送有针对性的上下文消息,来鼓励用户使用应用的关键功能，从而吸引这些用户。
+AppGallery Connect应用内消息服务，实现用户使用应用时，向活跃用户发送有针对性的上下文消息，来鼓励用户使用应用的关键功能，从而吸引这些用户。
 
 ## 环境要求
 
@@ -25,10 +25,10 @@ AppGallery Connect应用内消息服务，实现用户使用应用时，向活�
 ## 快速入门
 
 在运行quickstart前，您需要
-1、如果没有华为开发者联盟帐号，需要先[注册账号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
-2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Guides/agc-get-started)网站创建应用，软件包类型选择“APK(Android应用)”。
+1、如果没有华为开发者联盟帐号，需要先[注册帐号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
+2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/)网站创建应用，软件包类型选择“APK(Android应用)”。
 3、开通应用内消息服务（详见开发指南）。
-4、在AppGallery Connect 网站上下载agconnect-services.json 文件，并拷贝agconnect-services.json文件到app/kotlin-app根目录下。
+4、在AppGallery Connect 网站上下载agconnect-services.json文件，并拷贝agconnect-services.json文件到Android Studio项目的应用级根目录下。
 
 ## 示例代码
 

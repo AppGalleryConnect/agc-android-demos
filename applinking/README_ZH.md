@@ -25,7 +25,7 @@ AppLinking是一种不管应用是否已经安装都可以按照所需方式工�
 
 在运行quickstart前，您需要
 1、如果没有华为开发者联盟帐号，需要先[注册账号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
-2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Guides/agc-get-started)网站创建应用，软件包类型选择“APK(Android应用)”。
+2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/)网站创建应用，软件包类型选择“APK(Android应用)”。
 3、开启AppLinking服务（详见开发指南）。
 4、在AppGallery Connect 网站上下载agconnect-services.json 文件，并拷贝agconnect-services.json文件到app/kotlin-app根目录下。
 5、在AppLinking上创建链接前缀，并且复制替换MainActivity中的DOMAIN_URI_PREFIX
