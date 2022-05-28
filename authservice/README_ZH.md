@@ -26,7 +26,7 @@ AppGallery Connect认证服务支持多种认证方式，并与其他Serverless�
 ## 快速入门
 
 在运行quickstart前，您需要
-1、如果没有华为开发者联盟帐号，需要先[注册账号](https://developer.huawei.com/consumer/en/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
+1、如果没有华为开发者联盟帐号，需要先[注册账号](https://developer.huawei.com/consumer/cn/doc/start/registration-and-verification-0000001053628148)并通过实名认证。
 2、使用申请的帐号登录[AppGallery Connect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/)网站创建应用，软件包类型选择“APK(Android应用)”。
 3、启动认证方式：
       3.1 登录AppGallery Connect，点击“我的项目”，在项目列表中找到需要开通认证服务的项目。
@@ -90,10 +90,10 @@ quickstart 支持如下几种接入方式：
 ## 技术支持
 
 如果您对使用AppGallery Connect示例代码有疑问，请尝试：
-- 开发过程遇到问题上[Stack Overflow](https://stackoverflow.com/users/14194729/appgallery-connect)，在`AppGallery`标签下提问，有华为研发专家在线一对一解决您的问题。
-- 到[华为开发者论坛](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101188387844930001) AppGallery Connect板块与其他开发者进行交流。
+- 开发过程遇到问题上[Stack Overflow](https://stackoverflow.com/questions/tagged/appgallery-connect)，在`appgallery`标签下提问，有华为研发专家在线一对一解决您的问题。
+- 到[华为开发者论坛](https://developer.huawei.com/consumer/cn/forum/block/ag-connect) AppGallery Connect板块与其他开发者进行交流。
 
-如果您在尝试示例代码中遇到问题，请向仓库提交[issue](https://github.com/AppGalleryConnect/agc-demos/issues)，也欢迎您提交[Pull Request](https://github.com/AppGalleryConnect/agc-demos/pulls)。
+如果您在尝试示例代码中遇到问题，请向仓库提交[issue](https://github.com/AppGalleryConnect/agc-android-demos/issues)，也欢迎您提交[Pull Request](https://github.com/AppGalleryConnect/agc-android-demos/pulls)。
 
 ## 授权许可
 

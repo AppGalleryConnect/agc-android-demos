@@ -33,7 +33,7 @@ This project is a quick start sample developed using Cloud DB APIs.
 
 ## Result
 
-<img src="./screenshot.jpg" height="550" width="320" />
+<img src="./screenshot_en.jpg" height="550" width="320" />
 
 ## License
 

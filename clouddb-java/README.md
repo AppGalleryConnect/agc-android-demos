@@ -6,7 +6,7 @@ English | [中文](https://gitee.com/appgallery_connect/agc-android-demos/blob/m
 
  * [Introduction](#introduction)
  * [Getting Started](#getting-started)
- * Result](#result)
+ * [Result](#result)
  * [License](#license)
 
  ## Introduction
@@ -33,7 +33,7 @@ This project is a quick start sample developed using Cloud DB APIs.
 
 ## Result
 
-<img src="./screenshot.jpg" height="550" width="320" />
+<img src="./screenshot_en.jpg" height="550" width="320" />
 
 ## License
 

@@ -8,7 +8,6 @@ English | [中文](https://github.com/AppGalleryConnect/agc-demos/blob/main/Andr
  * [Environment Requirements](#environment-requirements)
  * [Getting Started](#getting-started)
  * [Sample Code](#sample-code)
- * [Result](#result)
  * [Technical Support](#technical-support)
  * [License](#license)
 
@@ -31,16 +30,13 @@ The Crash SDK supports crash simulation, exception simulation, crash collection 
 
 Sample code: src\main\java\com\huawei\agc\quickstart\crash\MainActivity.java
 
-## Result
-**Click makeCrash.**</br>
-<img src="images/crash.gif" alt="resultpage" height="600"/>
 
 ## Technical Support
 If you have any questions about the sample code, try the following:  
-- Visit [Stack Overflow](https://stackoverflow.com/users/14194729/appgallery-connect), submit your questions, and tag them with `AppGallery`. Huawei experts will answer your questions.  
-- Visit the AppGallery section in the [HUAWEI Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101188387844930001) and communicate with other developers.
+- Visit [Stack Overflow](https://stackoverflow.com/questions/tagged/appgallery-connect), submit your questions, and tag them with `appgallery`. Huawei experts will answer your questions.  
+- Go to **AppGallery** in the [HUAWEI Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101188387844930001) and communicate with other developers.
 
-If you encounter any issues when using the sample code, submit your [issues](https://github.com/AppGalleryConnect/agc-demos/issues) or submit a [pull request](https://github.com/AppGalleryConnect/agc-demos/pulls).
+If you encounter any issues when using the sample code, submit your [issues](https://github.com/AppGalleryConnect/agc-android-demos/issues) or submit a [pull request](https://github.com/AppGalleryConnect/agc-android-demos/pulls).
 
 ## License
 The sample code is licensed under the [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
