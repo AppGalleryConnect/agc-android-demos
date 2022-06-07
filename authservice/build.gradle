@@ -1,20 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 ext {
-<<<<<<< HEAD
-    authVersion = '1.5.2.300'
-}
-
-buildscript {
-    ext.agcpVersion = '1.5.2.300'
-=======
     authVersion = '1.6.1.300'
 }
 
 buildscript {
     ext.agcpVersion = '1.6.1.300'
     ext.kotlin_version = "1.5.10"
->>>>>>> dfa4723fa944e69ada9f5f1677ee9ed3a9ba5607
 
     repositories {
         maven { url file('repo').toURI() }
