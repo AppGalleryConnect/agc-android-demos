@@ -18,6 +18,8 @@ package com.huawei.agc.quickstart.function;
 
 /**
  * 功能描述
+ *
+ * @author g00371698
  * @since 2019-11-19
  */
 public class Sum {
