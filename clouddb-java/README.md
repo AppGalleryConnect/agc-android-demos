@@ -20,6 +20,8 @@ This project is a quick start sample developed using Cloud DB APIs.
 
 - Use Android Studio to open the project.
 
+- Modify the corresponding content of applicationId in agc-clouddb-demo-java/app/build.gradle to the package name com.huawei.agc.clouddb.xxxx of the above new project
+
 - Run the sample on your Android device. Note that Huawei Mobile Services (HMS) must be installed on your device.
 
 ## Running Result

@@ -19,6 +19,8 @@
 
 - 用Android Studio打开工程。
 
+- 修改agc-clouddb-demo-kotlin/app/build.gradle的applicationId对应内容为上述新建项目的包名com.huawei.agc.clouddb.xxxx
+
 - 在你的安卓设备上运行示例。
 
 ## 运行效果图
